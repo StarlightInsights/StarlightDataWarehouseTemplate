@@ -1,0 +1,31 @@
+{
+	"name": "StarlightInsights.com",
+	// Image template https://containers.dev/templates
+	"image": "mcr.microsoft.com/devcontainers/base:noble",
+	// Features to add to the dev container. More info: https://containers.dev/features
+	"features": {
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "os-provided",
+			"installTools": false
+		},
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": true,
+			"configureZshAsDefaultShell": true,
+			"installOhMyZsh": true,
+			"upgradePackages": true
+		}
+	},
+	"postCreateCommand": "zsh .devcontainer/postCreateCommand.zsh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"davidanson.vscode-markdownlint",
+				"dorzey.vscode-sqlfluff",
+				"innoverio.vscode-dbt-power-user"
+			]
+		}
+	},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root
+	// "remoteUser": "root" 
+	"remoteUser": "vscode"
+}
