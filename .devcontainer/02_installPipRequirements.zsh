@@ -8,6 +8,6 @@ reset="\033[0m"
 
 
 echo "${blue}Installing requirements.txt....${reset}"
-pip install -r requirements.txt --no-warn-script-location
+pip install -r requirements.txt --no-warn-script-location --break-system-packages
 echo ""
 echo ""

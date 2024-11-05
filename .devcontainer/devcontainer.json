@@ -1,9 +1,12 @@
 {
 	"name": "StarlightInsights.com",
 	// Image template https://containers.dev/templates
-	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"image": "mcr.microsoft.com/devcontainers/base:noble",
 	// Features to add to the dev container. More info: https://containers.dev/features
 	"features": {
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "os-provided"
+		},
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": true,
 			"configureZshAsDefaultShell": true,
