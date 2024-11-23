@@ -88,3 +88,25 @@ powerbi
 lightdash
  - lightdash
 ```
+
+## STATEMENT_TIMEOUT_IN_SECONDS
+
+Snowflake has a rare bug where queries will keep running and continue incurring costs.
+
+By setting `STATEMENT_TIMEOUT_IN_SECONDS` you can cap the max runtime and avoid overspending.
+
+```sql
+use role accountadmin;
+alter account set STATEMENT_TIMEOUT_IN_SECONDS = 3600;  -- one hour
+show parameters like 'STATEMENT_TIMEOUT_IN_SECONDS';
+```
+
+## Analytical database and dbt
+
+## Data loader
+
+## Developers
+
+## BI tools
+
+## GitHub Action
