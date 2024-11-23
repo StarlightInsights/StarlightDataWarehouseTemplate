@@ -119,9 +119,73 @@ alter account set STATEMENT_TIMEOUT_IN_SECONDS = 3600;  -- one hour
 show parameters like 'STATEMENT_TIMEOUT_IN_SECONDS';
 ```
 
-## Analytical databases
+## Developers
 
-Set up analytical databases and production schemas.
+```sql
+use role accountadmin;
+create warehouse if not exists developer
+    warehouse_size = small
+    auto_suspend = 120
+    auto_resume = true
+    initially_suspended = true;
+create or replace resource monitor developer
+with 
+  credit_quota = 50
+  frequency = monthly
+  start_timestamp = immediately
+  triggers
+    on 80 percent do notify
+    on 90 percent do suspend
+    on 100 percent do suspend_immediate;
+alter warehouse developer set resource_monitor = 'DEVELOPER';
+
+create role if not exists developer;
+
+```
+
+## GitHub Action
+
+### Create GitHub Action
+
+```sql
+use role accountadmin;
+create warehouse if not exists github
+    warehouse_size = small
+    auto_suspend = 60
+    auto_resume = true
+    initially_suspended = true;
+create or replace resource monitor github
+with 
+  credit_quota = 50
+  frequency = monthly
+  start_timestamp = immediately
+  triggers
+    on 80 percent do notify
+    on 90 percent do suspend
+    on 100 percent do suspend_immediate;
+alter warehouse github set resource_monitor = 'GITHUB';
+
+create role if not exists github;
+
+create user if not exists github
+    must_change_password = false
+    password = '' -- set password
+    default_role = 'github'
+    default_warehouse = 'github';
+
+grant role github to user github;
+```
+
+### Remove GitHub Action
+
+```sql
+drop resource monitor if exists github;
+drop warehouse if exists github;
+drop role if exists github;
+drop user if exists github;
+```
+
+## Analytical databases
 
 ### Create analytical databases
 
@@ -200,8 +264,4 @@ drop user if exists identifier($dataloader);
 
 ```
 
-## Developers
-
 ## BI tools
-
-## GitHub Action
