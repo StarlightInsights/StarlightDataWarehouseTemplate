@@ -89,7 +89,25 @@ lightdash
  - lightdash
 ```
 
-## STATEMENT_TIMEOUT_IN_SECONDS
+## Account
+
+Set a resource monitor on the account level.
+
+```sql
+use role accountadmin;
+create or replace resource monitor account_level
+credit_quota = 50
+frequency = 'monthly' 
+start_timestamp = 'immediately'
+triggers 
+    on 95 percent do suspend 
+    on 100 percent do suspend_immediate 
+    on 80 percent do notify;
+
+alter account set resource_monitor = account_level;
+```
+
+### STATEMENT_TIMEOUT_IN_SECONDS
 
 Snowflake has a rare bug where queries will keep running and continue incurring costs.
 
@@ -101,9 +119,95 @@ alter account set STATEMENT_TIMEOUT_IN_SECONDS = 3600;  -- one hour
 show parameters like 'STATEMENT_TIMEOUT_IN_SECONDS';
 ```
 
-## Analytical database and dbt
+## Analytical Databases
+
+Set up analytical databases and production schemas.
+
+### Create Analytical Databases
+
+```sql
+use role accountadmin;
+create database if not exists finance;
+create schema if not exists finance.datawarehouse;
+create database if not exists marketing;
+create schema if not exists marketing.datawarehouse;
+```
+
+### Remove Analytical Databases
+
+```sql
+use role accountadmin;
+drop database finance;
+drop database marketing;
+```
 
 ## Data loader
+
+A common approach to handling data loader databases is to assign the data loader role as the owner of the database.
+
+### Setup data loader
+
+```sql
+use role accountadmin;
+create database if not exists finance;
+create schema if not exists finance.datawarehouse;
+create database if not exists marketing;
+create schema if not exists marketing.datawarehouse;
+
+drop database finance;
+drop database marketing;
+
+use role accountadmin;
+set dataloader = 'fivetran';
+--set dataloader = 'airbyte';
+set password = '<long_password_min_20_characters>';  -- don't store password in GitHub
+
+create warehouse if not exists identifier($dataloader)
+    warehouse_size = xsmall
+    auto_suspend = 60
+    auto_resume = true
+    initially_suspended = true;
+    
+create database if not exists identifier($dataloader);
+create role if not exists identifier($dataloader);
+create user if not exists identifier($dataloader)
+    must_change_password = false
+    password = $password
+    default_role = $dataloader
+    default_warehouse = $dataloader
+    default_namespace = $dataloader;
+
+grant role identifier($dataloader) to user identifier($dataloader);
+grant ownership on database identifier($dataloader) to role identifier($dataloader);
+grant usage on warehouse identifier($dataloader) to role identifier($dataloader);
+
+create or replace resource monitor identifier($dataloader)
+with 
+  credit_quota = 50
+  frequency = monthly
+  start_timestamp = immediately
+  triggers
+    on 80 percent do notify
+    on 90 percent do suspend
+    on 100 percent do suspend_immediate;
+set upper_warehouse = upper($dataloader);
+alter warehouse identifier($dataloader) set resource_monitor = $upper_warehouse;
+```
+
+### Remove data loader
+
+```sql
+use role accountadmin;
+set dataloader = 'fivetran';
+--set dataloader = 'airbyte';
+grant ownership on database identifier($dataloader) to role accountadmin;
+drop database if exists identifier($dataloader);
+drop resource monitor if exists identifier($dataloader);
+drop warehouse if exists identifier($dataloader);
+drop role if exists identifier($dataloader);
+drop user if exists identifier($dataloader);
+
+```
 
 ## Developers
 
