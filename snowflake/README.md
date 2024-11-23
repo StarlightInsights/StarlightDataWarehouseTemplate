@@ -1,8 +1,8 @@
-# Snowflake Setup
+# Snowflake setup
 
 How to set up Snowflake.
 
-## Architectural Overview
+## Architectural overview
 
 ### Databases
 
@@ -61,11 +61,11 @@ powerbi
 lightdash
 ```
 
-### Resource Monitors
+### Resource monitors
 
 Have one resource monitor for the account and one for each warehouse.
 
-### Users and Roles
+### Users and roles
 
 Each developer and system should have its own user.
 
@@ -119,11 +119,11 @@ alter account set STATEMENT_TIMEOUT_IN_SECONDS = 3600;  -- one hour
 show parameters like 'STATEMENT_TIMEOUT_IN_SECONDS';
 ```
 
-## Analytical Databases
+## Analytical databases
 
 Set up analytical databases and production schemas.
 
-### Create Analytical Databases
+### Create analytical databases
 
 ```sql
 use role accountadmin;
@@ -133,7 +133,7 @@ create database if not exists marketing;
 create schema if not exists marketing.datawarehouse;
 ```
 
-### Remove Analytical Databases
+### Remove analytical databases
 
 ```sql
 use role accountadmin;
@@ -148,15 +148,6 @@ A common approach to handling data loader databases is to assign the data loader
 ### Setup data loader
 
 ```sql
-use role accountadmin;
-create database if not exists finance;
-create schema if not exists finance.datawarehouse;
-create database if not exists marketing;
-create schema if not exists marketing.datawarehouse;
-
-drop database finance;
-drop database marketing;
-
 use role accountadmin;
 set dataloader = 'fivetran';
 --set dataloader = 'airbyte';
