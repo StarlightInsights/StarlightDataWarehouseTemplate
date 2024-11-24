@@ -89,6 +89,18 @@ lightdash
  - lightdash
 ```
 
+### BI tools
+
+Handling permissions for BI tools is somewhat challenging due to the limitations of permissions in Snowflake and the interaction between Snowflake and dbt.
+
+Generally, you have three options, each with its own drawbacks.
+
+**1. Grant total permission to the data warehouse schema for the BI tool.** This requires that the BI tool can manage the permissions appropriately.
+
+**2. The BI tool will only have access to views.** Materialize all dbt models as tables, except for those that the BI tool should access. Those should be materialized as views.
+
+**3. Use [dbt grants](https://docs.getdbt.com/reference/resource-configs/grants).**
+
 ## Account
 
 Set a resource monitor on the account level.
@@ -288,4 +300,52 @@ drop user if exists identifier($dataloader);
 
 ```
 
-## BI tools
+## BI tools scripts
+
+### Create BI tools
+
+```sql
+use role accountadmin;
+set bitool = 'powerbi';
+--set bitool = 'lighdash';
+set password = '<long_password_min_20_characters>';  -- don't store password in GitHub
+
+create warehouse if not exists identifier($bitool)
+    warehouse_size = xsmall
+    auto_suspend = 60
+    auto_resume = true
+    initially_suspended = true;
+
+create or replace resource monitor identifier($bitool)
+with 
+  credit_quota = 50
+  frequency = monthly
+  start_timestamp = immediately
+  triggers
+    on 80 percent do notify
+    on 90 percent do suspend
+    on 100 percent do suspend_immediate;
+set upper_warehouse = upper($bitool);
+alter warehouse identifier($bitool) set resource_monitor = $upper_warehouse;
+
+create role if not exitsts identifier($bitool);
+grant role identifier($bitool) to user identifier($bitool);
+grant usage on warehouse identifier($bitool) to role identifier($bitool);
+```
+
+### Remove BI tools
+
+```sql
+use role accountadmin;
+set bitool = 'powerbi';
+--set bitool = 'lighdash';
+drop resource monitor if exists identifier($bitool);
+drop warehouse if exists identifier($bitool);
+drop role if exists identifier($bitool);
+drop user if exists identifier($bitool);
+
+```
+
+### 1. Grant total permission to the data warehouse schema for the BI tool
+
+### 2. The BI tool will only have access to views
