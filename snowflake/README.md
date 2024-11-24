@@ -91,6 +91,12 @@ lightdash
  - lightdash
 ```
 
+#### MFA and key pair
+
+It is highly recommended to enforce MFA (Multi-Factor Authentication) for all Snowflake users that belong to a person.
+
+For system users, it is recommended to use a **[key pair](https://docs.snowflake.com/en/user-guide/key-pair-auth)** instead of a password. Unfortunately, many tools that connect to Snowflake do not support key pair authentication.
+
 ### BI tools
 
 Handling permissions for BI tools is somewhat challenging due to the limitations of permissions in Snowflake and the interaction between Snowflake and dbt.
@@ -180,6 +186,36 @@ use role accountadmin;
 drop resource monitor if exists developer;
 drop warehouse if exists developer;
 drop role if exists developer;
+```
+
+## Developer
+
+### Create developer
+
+```sql
+use role accountadmin;
+set username = '';  -- don't store password in GitHub
+set email = '';  -- don't store password in GitHub
+set password = '<long_password_min_20_characters>';  -- don't store password in GitHub
+
+create user if not exists identifier($username)
+    type = person
+    must_change_password = true
+    password = $password
+    email = $email
+    default_role = developer
+    default_warehouse = developer
+    default_namespace = developer;
+
+grant role developer to user identifier($username);
+```
+
+### Remove developer
+
+```sql
+use role accountadmin;
+set username = '';  -- don't store password in GitHub
+drop user if exists identifier($username);
 ```
 
 ## GitHub Action
@@ -368,10 +404,6 @@ drop user if exists identifier($bitool);
 ```sql
 use role accountadmin;
 set bitool = 'powerbi';
-
-
-
 ```
 
 
-### 2. The BI tool will only have access to views
