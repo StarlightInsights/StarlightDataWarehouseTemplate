@@ -311,7 +311,6 @@ A common approach to handling data loader databases is to assign the data loader
 use role accountadmin;
 set dataloader = 'fivetran';
 --set dataloader = 'airbyte';
-set password = '<long_password_min_20_characters>';  -- don't store in GitHub
 
 create warehouse if not exists identifier($dataloader)
     warehouse_size = xsmall
@@ -322,11 +321,22 @@ create warehouse if not exists identifier($dataloader)
 create database if not exists identifier($dataloader);
 create role if not exists identifier($dataloader);
 create user if not exists identifier($dataloader)
-    must_change_password = false
-    password = $password
+    type = service
     default_role = $dataloader
     default_warehouse = $dataloader
     default_namespace = $dataloader;
+
+alter user identifier($dataloader)
+set rsa_public_key = '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuW9q7WSUZK+NsZGe59uU
+57P0XMS2KDKtBTK8sPj+yzseAdAgM8aPMgAug8zAd+Ct83BL+mBfqICb3mlFYYRg
+dzWjRR2CY3dL2NlsvHyc9qunLaAf1MmW8cb5un69IX7S3cnX+R6+sFL5STmHUDq3
+ztBlPOo5qy+SzahleMB+zKi23KK9RKUsUdZuIoQmBUdLen++aOhTJwdMUwIqk4UY
+7x77h00Ho06/DvlQqpl1YCjB691OM6ncnf3mGQpAZGBJJfOuYw1FgCS85ytpE70S
+FberUOhoeFMkjGvG45AiTNJFDFZyD4NUMN8CFfvoi8Pq3qzxc4cnHfZ+xncxC5RJ
+lQIDlQA1
+-----END PUBLIC KEY-----';
+
 
 grant role identifier($dataloader) to user identifier($dataloader);
 grant ownership on database identifier($dataloader) to role identifier($dataloader);
@@ -363,7 +373,6 @@ drop resource monitor if exists identifier($dataloader);
 drop warehouse if exists identifier($dataloader);
 drop role if exists identifier($dataloader);
 drop user if exists identifier($dataloader);
-
 ```
 
 ## BI tools scripts
