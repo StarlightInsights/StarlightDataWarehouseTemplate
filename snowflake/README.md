@@ -149,6 +149,16 @@ By setting `allow_client_mfa_caching` to **true**, you can enforce MFA at the us
 alter account set allow_client_mfa_caching = true;
 ```
 
+### Require MFA
+
+```sql
+use role accountadmin;
+create database snowflake_policies;
+create schema snowflake_policies.authentication_policies;
+create authentication policy if not exists snowflake_policies.authentication_policies.require_mfa
+    mfa_enrollment = required;
+```
+
 ## Developers
 
 ### Create developers
@@ -206,6 +216,9 @@ create user if not exists identifier($username)
     default_role = developer
     default_warehouse = developer
     default_namespace = developer;
+
+alter user  identifier($username)
+    set authentication_policy = require_mfa;
 
 grant role developer to user identifier($username);
 ```
@@ -332,6 +345,12 @@ set upper_warehouse = upper($dataloader);
 alter warehouse identifier($dataloader) set resource_monitor = $upper_warehouse;
 ```
 
+**Specific for Fivetran:**
+
+```sql
+alter user fivetran set binary_input_format = 'BASE64';
+```
+
 ### Remove data loader
 
 ```sql
@@ -396,14 +415,4 @@ drop resource monitor if exists identifier($bitool);
 drop warehouse if exists identifier($bitool);
 drop role if exists identifier($bitool);
 drop user if exists identifier($bitool);
-
 ```
-
-### 1. Grant total permission to the data warehouse schema for the BI tool
-
-```sql
-use role accountadmin;
-set bitool = 'powerbi';
-```
-
-
