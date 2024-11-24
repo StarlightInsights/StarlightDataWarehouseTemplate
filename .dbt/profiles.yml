@@ -6,9 +6,8 @@ starlight:
       account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('SNOWFLAKE_USER') }}"
       role: dbt
-
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
-
+      authenticator: username_password_mfa
       database: datawarehouse
       warehouse: dbt
       schema: "{{ env_var('SNOWFLAKE_USER') }}"
@@ -19,9 +18,8 @@ starlight:
       account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('SNOWFLAKE_USER') }}"
       role: dbt
-
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
-
+      authenticator: username_password_mfa
       database: datawarehouse
       warehouse: dbt
       schema: datawarehouse

@@ -77,6 +77,8 @@ Have one developer role and one role for every system.
 developer <- role
  - developer_1 <- user
  - developer_2
+ - dbt_developer_1
+ - dbt_developer_2
 github
  - github
 fivetran
@@ -100,6 +102,8 @@ Generally, you have three options, each with its own drawbacks.
 **2. The BI tool will only have access to views.** Materialize all dbt models as tables, except for those that the BI tool should access. Those should be materialized as views.
 
 **3. Use [dbt grants](https://docs.getdbt.com/reference/resource-configs/grants).**
+
+The dbt grant approach is recommended since it follows the principle of least privilege.
 
 ## Account
 
@@ -129,6 +133,14 @@ By setting `STATEMENT_TIMEOUT_IN_SECONDS` you can cap the max runtime and avoid 
 use role accountadmin;
 alter account set STATEMENT_TIMEOUT_IN_SECONDS = 3600;  -- one hour
 show parameters like 'STATEMENT_TIMEOUT_IN_SECONDS';
+```
+
+### allow_client_mfa_caching
+
+By setting `allow_client_mfa_caching` to **true**, you can enforce MFA at the user level without requiring the user to authenticate multiple times during a `dbt run`.
+
+```sql
+alter account set allow_client_mfa_caching = true;
 ```
 
 ## Developers
