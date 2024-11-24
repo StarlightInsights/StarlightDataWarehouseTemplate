@@ -204,9 +204,9 @@ drop role if exists developer;
 
 ```sql
 use role accountadmin;
-set username = '';  -- don't store password in GitHub
-set email = '';  -- don't store password in GitHub
-set password = '<long_password_min_20_characters>';  -- don't store password in GitHub
+set username = '';  -- don't store in GitHub
+set email = '';  -- don't store in GitHub
+set password = '<long_password_min_20_characters>';  -- don't store in GitHub
 
 create user if not exists identifier($username)
     type = person
@@ -227,7 +227,7 @@ grant role developer to user identifier($username);
 
 ```sql
 use role accountadmin;
-set username = '';  -- don't store password in GitHub
+set username = '';  -- don't store in GitHub
 drop user if exists identifier($username);
 ```
 
@@ -311,7 +311,7 @@ A common approach to handling data loader databases is to assign the data loader
 use role accountadmin;
 set dataloader = 'fivetran';
 --set dataloader = 'airbyte';
-set password = '<long_password_min_20_characters>';  -- don't store password in GitHub
+set password = '<long_password_min_20_characters>';  -- don't store in GitHub
 
 create warehouse if not exists identifier($dataloader)
     warehouse_size = xsmall
@@ -374,7 +374,7 @@ drop user if exists identifier($dataloader);
 use role accountadmin;
 set bitool = 'powerbi';
 --set bitool = 'lighdash';
-set password = '<long_password_min_20_characters>';  -- don't store password in GitHub
+set password = '<long_password_min_20_characters>';  -- don't store in GitHub
 
 create warehouse if not exists identifier($bitool)
     warehouse_size = xsmall
