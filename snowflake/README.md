@@ -108,7 +108,7 @@ Set a resource monitor on the account level.
 ```sql
 use role accountadmin;
 create or replace resource monitor account_level
-credit_quota = 50
+credit_quota = 100
 frequency = 'monthly' 
 start_timestamp = 'immediately'
 triggers 
@@ -156,9 +156,7 @@ with
 alter warehouse developer set resource_monitor = 'DEVELOPER';
 
 create role if not exists developer;
-
-set current_user = current_user();
-grant role developer to user identifier($current_user);
+grant role developer to role accountadmin;
 
 grant usage on warehouse developer to role developer;
 ```
@@ -198,6 +196,7 @@ with
 alter warehouse github set resource_monitor = 'GITHUB';
 
 create role if not exists github;
+grant role github to role accountadmin;
 
 grant usage on warehouse github to role github;
 
@@ -329,6 +328,12 @@ set upper_warehouse = upper($bitool);
 alter warehouse identifier($bitool) set resource_monitor = $upper_warehouse;
 
 create role if not exitsts identifier($bitool);
+create user if not exists identifier($bitool)
+    must_change_password = false
+    password = $password
+    default_role = $bitool
+    default_warehouse = $bitool
+    default_namespace = $bitool;
 grant role identifier($bitool) to user identifier($bitool);
 grant usage on warehouse identifier($bitool) to role identifier($bitool);
 ```
@@ -347,5 +352,14 @@ drop user if exists identifier($bitool);
 ```
 
 ### 1. Grant total permission to the data warehouse schema for the BI tool
+
+```sql
+use role accountadmin;
+set bitool = 'powerbi';
+
+
+
+```
+
 
 ### 2. The BI tool will only have access to views
