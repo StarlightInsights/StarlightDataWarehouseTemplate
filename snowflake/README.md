@@ -77,8 +77,6 @@ Have one developer role and one role for every system.
 developer <- role
  - developer_1 <- user
  - developer_2
- - dbt_developer_1
- - dbt_developer_2
 github
  - github
 fivetran
