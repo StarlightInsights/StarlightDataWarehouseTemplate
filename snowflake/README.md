@@ -145,6 +145,9 @@ alter warehouse developer set resource_monitor = 'DEVELOPER';
 
 create role if not exists developer;
 
+set current_user = current_user();
+grant role developer to user identifier($current_user);
+
 grant usage on warehouse developer to role developer;
 ```
 
