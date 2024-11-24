@@ -215,7 +215,7 @@ create user if not exists identifier($username)
     default_warehouse = developer
     default_namespace = developer;
 
-alter user  identifier($username)
+alter user identifier($username)
     set authentication_policy = require_mfa;
 
 grant role developer to user identifier($username);
@@ -260,10 +260,21 @@ grant role github to role accountadmin;
 grant usage on warehouse github to role github;
 
 create user if not exists github
-    must_change_password = false
-    password = '' -- set password
-    default_role = 'github'
-    default_warehouse = 'github';
+    type = service
+    default_role = github
+    default_warehouse = github;
+
+alter user github
+set rsa_public_key = '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuW9q7WSUZK+NsZGe59uU
+57P0XMS2KDKtBTK8sPj+yzseAdAgM8aPMgAug8zAd+Ct83BL+mBfqICb3mlFYYRg
+dzWjRR2CY3dL2NlsvHyc9qunLaAf1MmW8cb5un69IX7S3cnX+R6+sFL5STmHUDq3
+ztBlPOo5qy+SzahleMB+zKi23KK9RKUsUdZuIoQmBUdLen++aOhTJwdMUwIqk4UY
+7x77h00Ho06/DvlQqpl1YCjB691OM6ncnf3mGQpAZGBJJfOuYw1FgCS85ytpE70S
+FberUOhoeFMkjGvG45AiTNJFDFZyD4NUMN8CFfvoi8Pq3qzxc4cnHfZ+xncxC5RJ
+lQIDlQA1
+-----END PUBLIC KEY-----';
+
 
 grant role github to user github;
 ```
@@ -406,8 +417,7 @@ create user if not exists identifier($bitool)
     must_change_password = false
     password = $password
     default_role = $bitool
-    default_warehouse = $bitool
-    default_namespace = $bitool;
+    default_warehouse = $bitool;
 grant role identifier($bitool) to user identifier($bitool);
 grant usage on warehouse identifier($bitool) to role identifier($bitool);
 ```
