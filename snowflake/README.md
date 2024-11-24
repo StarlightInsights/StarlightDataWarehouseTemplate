@@ -121,13 +121,17 @@ show parameters like 'STATEMENT_TIMEOUT_IN_SECONDS';
 
 ## Developers
 
+### Create developers
+
 ```sql
 use role accountadmin;
+
 create warehouse if not exists developer
     warehouse_size = small
     auto_suspend = 120
     auto_resume = true
     initially_suspended = true;
+
 create or replace resource monitor developer
 with 
   credit_quota = 50
@@ -141,6 +145,16 @@ alter warehouse developer set resource_monitor = 'DEVELOPER';
 
 create role if not exists developer;
 
+grant usage on warehouse developer to role developer;
+```
+
+### Remove developers
+
+```sql
+use role accountadmin;
+drop resource monitor if exists developer;
+drop warehouse if exists developer;
+drop role if exists developer;
 ```
 
 ## GitHub Action
@@ -149,11 +163,13 @@ create role if not exists developer;
 
 ```sql
 use role accountadmin;
+
 create warehouse if not exists github
     warehouse_size = small
     auto_suspend = 60
     auto_resume = true
     initially_suspended = true;
+
 create or replace resource monitor github
 with 
   credit_quota = 50
@@ -163,9 +179,12 @@ with
     on 80 percent do notify
     on 90 percent do suspend
     on 100 percent do suspend_immediate;
+
 alter warehouse github set resource_monitor = 'GITHUB';
 
 create role if not exists github;
+
+grant usage on warehouse github to role github;
 
 create user if not exists github
     must_change_password = false
@@ -190,17 +209,19 @@ drop user if exists github;
 ### Create analytical databases
 
 ```sql
-use role accountadmin;
-create database if not exists finance;
-create schema if not exists finance.datawarehouse;
-create database if not exists marketing;
-create schema if not exists marketing.datawarehouse;
+use role developer;
+set database_name = 'finance';
+--set database_name = 'marketing';
+create database if not exists identifier($database_name);
+set database_schema = concat($database_name, '.datawarehouse');
+create schema if not exists identifier($database_schema);
+grant ownership on database finance to role developer;
 ```
 
 ### Remove analytical databases
 
 ```sql
-use role accountadmin;
+use role developer;
 drop database finance;
 drop database marketing;
 ```
