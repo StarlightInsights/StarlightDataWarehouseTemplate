@@ -303,8 +303,8 @@ grant ownership on database finance to role developer;
 
 ```sql
 use role developer;
-drop database finance;
-drop database marketing;
+drop database if exists finance;
+drop database if exists marketing;
 ```
 
 ## Data loader
