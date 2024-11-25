@@ -407,8 +407,8 @@ with
     on 80 percent do notify
     on 90 percent do suspend
     on 100 percent do suspend_immediate;
-set upper_warehouse = upper($bitool);
-alter warehouse identifier($bitool) set resource_monitor = $upper_warehouse;
+set upper_resource_monitor = upper($dataloader);
+alter warehouse identifier($dataloader) set resource_monitor = $upper_resource_monitor;
 
 create role if not exitsts identifier($bitool);
 create user if not exists identifier($bitool)
