@@ -275,7 +275,6 @@ FberUOhoeFMkjGvG45AiTNJFDFZyD4NUMN8CFfvoi8Pq3qzxc4cnHfZ+xncxC5RJ
 lQIDlQA1
 -----END PUBLIC KEY-----';
 
-
 grant role github to user github;
 ```
 
@@ -327,6 +326,19 @@ create warehouse if not exists identifier($dataloader)
     auto_resume = true
     initially_suspended = true;
     
+create or replace resource monitor identifier($dataloader)
+with 
+  credit_quota = 50
+  frequency = monthly
+  start_timestamp = immediately
+  triggers
+    on 80 percent do notify
+    on 90 percent do suspend
+    on 100 percent do suspend_immediate;
+
+set upper_warehouse = upper($dataloader);
+alter warehouse identifier($dataloader) set resource_monitor = $upper_warehouse;
+
 create database if not exists identifier($dataloader);
 create role if not exists identifier($dataloader);
 create user if not exists identifier($dataloader)
@@ -346,22 +358,9 @@ FberUOhoeFMkjGvG45AiTNJFDFZyD4NUMN8CFfvoi8Pq3qzxc4cnHfZ+xncxC5RJ
 lQIDlQA1
 -----END PUBLIC KEY-----';
 
-
 grant role identifier($dataloader) to user identifier($dataloader);
 grant ownership on database identifier($dataloader) to role identifier($dataloader);
 grant usage on warehouse identifier($dataloader) to role identifier($dataloader);
-
-create or replace resource monitor identifier($dataloader)
-with 
-  credit_quota = 50
-  frequency = monthly
-  start_timestamp = immediately
-  triggers
-    on 80 percent do notify
-    on 90 percent do suspend
-    on 100 percent do suspend_immediate;
-set upper_warehouse = upper($dataloader);
-alter warehouse identifier($dataloader) set resource_monitor = $upper_warehouse;
 ```
 
 **Specific for Fivetran:**
