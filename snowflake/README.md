@@ -292,12 +292,16 @@ drop user if exists github;
 ### Create analytical databases
 
 ```sql
-use role developer;
+use role accountadmin;
 set database_name = 'finance';
---set database_name = 'marketing';
+set database_name = 'marketing';
 create database if not exists identifier($database_name);
 set database_schema = concat($database_name, '.datawarehouse');
 create schema if not exists identifier($database_schema);
+grant ownership on database identifier($database_name) to role developer;
+grant usage, create schema on database identifier($database_name) to role github;
+grant ownership on schema identifier($database_schema) to role github;
+
 ```
 
 ### Remove analytical databases
