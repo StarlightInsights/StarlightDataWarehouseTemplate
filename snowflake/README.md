@@ -53,8 +53,8 @@ Often you want to have a warehouse for production, development, for each data lo
 #### Warehouse example
 
 ```text
-production <- warehouse
-development
+development <- warehouse
+github
 fivetran
 airbyte
 powerbi
