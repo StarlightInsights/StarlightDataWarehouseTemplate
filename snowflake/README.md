@@ -417,13 +417,14 @@ with
 set upper_resource_monitor = upper($dataloader);
 alter warehouse identifier($dataloader) set resource_monitor = $upper_resource_monitor;
 
-create role if not exitsts identifier($bitool);
+create role if not exists identifier($bitool);
 create user if not exists identifier($bitool)
     must_change_password = false
     password = $password
     default_role = $bitool
     default_warehouse = $bitool;
 grant role identifier($bitool) to user identifier($bitool);
+grant role identifier($bitool) to role developer;
 grant usage on warehouse identifier($bitool) to role identifier($bitool);
 ```
 
