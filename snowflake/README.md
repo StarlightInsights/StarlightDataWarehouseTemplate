@@ -308,8 +308,10 @@ grant ownership on schema identifier($database_schema) to role github;
 
 ```sql
 use role accountadmin;
-drop database if exists finance;
-drop database if exists marketing;
+set database_name = 'finance';
+--set database_name = 'marketing';
+drop database if exists identifier($database_name);
+
 ```
 
 ## Data loader
