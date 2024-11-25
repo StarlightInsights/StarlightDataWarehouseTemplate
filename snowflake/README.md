@@ -214,7 +214,7 @@ create user if not exists identifier($username)
     default_namespace = developer;
 
 alter user identifier($username)
-    set authentication_policy = require_mfa;
+    set authentication policy snowflake_policies.authentication_policies.require_mfa;
 
 grant role developer to user identifier($username);
 ```
