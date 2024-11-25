@@ -358,6 +358,8 @@ lQIDlQA1
 -----END PUBLIC KEY-----';
 
 grant role identifier($dataloader) to user identifier($dataloader);
+grant role identifier($dataloader) to role github;
+grant role identifier($dataloader) to role developer;
 grant ownership on database identifier($dataloader) to role identifier($dataloader);
 grant usage on warehouse identifier($dataloader) to role identifier($dataloader);
 ```
@@ -374,7 +376,6 @@ alter user fivetran set binary_input_format = 'BASE64';
 use role accountadmin;
 set dataloader = 'fivetran';
 --set dataloader = 'airbyte';
-grant ownership on database identifier($dataloader) to role accountadmin;
 drop database if exists identifier($dataloader);
 drop resource monitor if exists identifier($dataloader);
 drop warehouse if exists identifier($dataloader);
