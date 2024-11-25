@@ -294,7 +294,7 @@ drop user if exists github;
 ```sql
 use role accountadmin;
 set database_name = 'finance';
-set database_name = 'marketing';
+--set database_name = 'marketing';
 create database if not exists identifier($database_name);
 set database_schema = concat($database_name, '.datawarehouse');
 create schema if not exists identifier($database_schema);
