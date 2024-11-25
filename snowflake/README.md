@@ -149,8 +149,8 @@ alter account set allow_client_mfa_caching = true;
 
 ```sql
 use role accountadmin;
-create database snowflake_policies;
-create schema snowflake_policies.authentication_policies;
+create database if not exists snowflake_policies;
+create schema if not exists snowflake_policies.authentication_policies;
 create authentication policy if not exists snowflake_policies.authentication_policies.require_mfa
     mfa_enrollment = required;
 ```
