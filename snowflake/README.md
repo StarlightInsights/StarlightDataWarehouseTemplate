@@ -182,6 +182,8 @@ alter warehouse developer set resource_monitor = 'DEVELOPER';
 create role if not exists developer;
 grant role developer to role accountadmin;
 
+grant create database on account to role developer;
+
 grant usage on warehouse developer to role developer;
 ```
 
@@ -296,13 +298,12 @@ set database_name = 'finance';
 create database if not exists identifier($database_name);
 set database_schema = concat($database_name, '.datawarehouse');
 create schema if not exists identifier($database_schema);
-grant ownership on database finance to role developer;
 ```
 
 ### Remove analytical databases
 
 ```sql
-use role developer;
+use role accountadmin;
 drop database if exists finance;
 drop database if exists marketing;
 ```
