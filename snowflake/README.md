@@ -107,8 +107,6 @@ Generally, you have three options, each with its own drawbacks.
 
 **3. Use [dbt grants](https://docs.getdbt.com/reference/resource-configs/grants).**
 
-The dbt grant approach is recommended since it follows the principle of least privilege.
-
 ## Account
 
 Set a resource monitor on the account level.
