@@ -8,7 +8,7 @@ How to set up Snowflake.
 
 You will mainly have two database types: one analytical and one per data loader.
 
-**The analytical database** will store the schemas for, CI/CD, dbt development, and the schemas for your production datawarehouse.
+**The analytical database** will store the schemas for CI/CD, dbt development, and the schemas for your production datawarehouse.
 
 If you have multiple dbt projects, then have one database for each dbt project.
 
