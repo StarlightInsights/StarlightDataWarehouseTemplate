@@ -16,7 +16,7 @@ Each data loader should have its own database.
 
 #### Schemas
 
-**In the analytical database,** create one schema per developer, one schema per PR for CI/CD, and one production schema.
+**In the analytical database,** use one schema per developer, one schema per PR for CI/CD, and one production schema.
 
 **In the data loader database,** use one schema per source system.
 
