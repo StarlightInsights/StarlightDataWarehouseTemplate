@@ -5,23 +5,23 @@ starlight:
       type: snowflake
       account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('SNOWFLAKE_USER') }}"
-      role: dbt
+      role: developer
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
       authenticator: username_password_mfa
-      database: datawarehouse
-      warehouse: dbt
-      schema: "{{ env_var('SNOWFLAKE_USER') }}"
+      database: starlight
+      warehouse: developer
+      schema: "dbt_{{ env_var('SNOWFLAKE_USER') }}"
       threads: 16
       client_session_keep_alive: false
     production:
       type: snowflake
       account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('SNOWFLAKE_USER') }}"
-      role: dbt
+      role: github
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
       authenticator: username_password_mfa
-      database: datawarehouse
-      warehouse: dbt
+      database: starlight
+      warehouse: github
       schema: datawarehouse
       threads: 16
       client_session_keep_alive: false
