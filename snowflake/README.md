@@ -4,21 +4,21 @@
 
 ### Databases
 
-You will mainly have two database types: one analytical and one per data loader.
+You will primarily work with two types of databases: one analytical database and one database per data loader.
 
-**The analytical database**, you will have one schema per developer, one schema per PR for CI/CD, and one production schema.
+**The analytical database** is managed by dbt.
 
 If you have multiple dbt projects, then have one analytical database for each dbt project.
 
-**The data loader** databases will store raw data from your data loaders.
+**The data loader databases** store raw data from data loaders.
 
-Each data loader will have one database.
+Each data loader should have its own database.
 
 #### Schemas
 
-**In the analytical database,** you should have one schema per developer and one production schema.
+**In the analytical database,** create one schema per developer, one schema per PR for CI/CD, and one production schema.
 
-**In the data loader database,** you should have one schema per source system.
+**In the data loader database,** use one schema per source system.
 
 #### Database example
 
