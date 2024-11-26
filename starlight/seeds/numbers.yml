@@ -1,0 +1,16 @@
+#  select row_number() over (order by seq4()) as number
+#  from table(generator(rowcount => 10000))
+#  order by 1;
+
+seeds:
+  - name: numbers
+    config:
+      contract:
+        enforced: true
+    description: All numbers from 1 to 10000
+    columns:
+      - name: number
+        description: Number
+        data_type: int
+        constraints:
+          - type: not_null

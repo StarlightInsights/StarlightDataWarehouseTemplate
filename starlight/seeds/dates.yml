@@ -1,0 +1,16 @@
+#  select dateadd(day, seq4(), '1990-01-01'::date) as date
+#  from table(generator(rowcount => 22280))
+#  order by 1
+
+seeds:
+  - name: dates
+    config:
+      contract:
+        enforced: true
+    description: All dates from 1990 to 2050
+    columns:
+      - name: date
+        description: Dates
+        data_type: date
+        constraints:
+          - type: not_null
