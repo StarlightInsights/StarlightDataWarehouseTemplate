@@ -318,8 +318,6 @@ drop database if exists identifier($database_name);
 
 ## Data loader
 
-A common approach to handling data loader databases is to assign the data loader role as the owner of the database.
-
 ### Setup data loader
 
 ```sql
