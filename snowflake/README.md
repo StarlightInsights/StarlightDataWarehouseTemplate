@@ -6,9 +6,9 @@
 
 You will mainly have two database types: one analytical and one per data loader.
 
-**The analytical database** will store the schemas for CI/CD, dbt development, and the schemas for your production datawarehouse.
+**The analytical database**, you will have one schema per developer, one schema per PR for CI/CD, and one production schema.
 
-If you have multiple dbt projects, then have one database for each dbt project.
+If you have multiple dbt projects, then have one analytical database for each dbt project.
 
 **The data loader** databases will store raw data from your data loaders.
 
