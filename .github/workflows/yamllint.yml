@@ -1,0 +1,44 @@
+name: YAMLLint
+
+on:
+  pull_request:
+    paths:
+      - '**.yaml'
+      - '**.yml'
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install yamllint from requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          grep yamllint requirements.txt | xargs -n 1 pip install
+
+      - name: Lint YAML files on Pull Request
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          git ls-files --exclude-standard --cached --others -- '*.yaml' '*.yml' | xargs yamllint
+
+      - name: Lint all YAML files on Schedule
+        if: github.event_name == 'schedule'
+        run: |
+          find . -name '*.yaml' -or -name '*.yml' -print0 | xargs -0 yamllint
+
+      - name: Lint all YAML files on Manual Trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          find . -name '*.yaml' -or -name '*.yml' -print0 | xargs -0 yamllint

@@ -1,0 +1,41 @@
+name: MarkdownLint
+
+on:
+  pull_request:
+    paths:
+      - '**.md'
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Lint Markdown files on Pull Request
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          git diff --name-only --diff-filter=d origin/main | grep .md$ | xargs -I {} find {} -not -path "./**/docsblocks/**" -print0 | xargs -0 markdownlint --config .markdownlint.yml
+
+      - name: Lint all Markdown files on Schedule
+        if: github.event_name == 'schedule'
+        run: |
+          find . -name '*.md' -not -path "./**/docsblocks/**" -print0 | xargs -0 markdownlint --config .markdownlint.yml
+
+      - name: Lint all Markdown files on Manual Trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          find . -name '*.md' -not -path "./**/docsblocks/**" -print0 | xargs -0 markdownlint --config .markdownlint.yml
