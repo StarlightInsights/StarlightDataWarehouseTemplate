@@ -1,7 +1,5 @@
 # Snowflake setup
 
-How to set up Snowflake.
-
 ## Architectural overview
 
 ### Databases
