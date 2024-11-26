@@ -1,0 +1,16 @@
+#  select dateadd(month, seq4(), '1990-01-01'::date) as first_of_month
+#  from table(generator(rowcount => 732))
+#  order by 1;
+
+seeds:
+  - name: months
+    config:
+      contract:
+        enforced: true
+    description: All months from 1990 to 2050
+    columns:
+      - name: month
+        description: Months
+        data_type: date
+        constraints:
+          - type: not_null

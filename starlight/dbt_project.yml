@@ -1,0 +1,15 @@
+name: 'starlight'
+
+profile: 'starlight'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  starlight:
+    example:
+      +materialized: view
