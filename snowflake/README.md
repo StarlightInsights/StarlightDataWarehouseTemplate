@@ -27,10 +27,14 @@ finance <- database
  - datawarehouse <- schema
  - dbt_developer_1
  - dbt_developer_2
+ - github_pr_1
+ - github_pr_2
 marketing
  - datawarehouse
  - dbt_developer_1
  - dbt_developer_2
+ - github_pr_1
+ - github_pr_2
 fivetran
  - google_sheets
  - google_analytics
