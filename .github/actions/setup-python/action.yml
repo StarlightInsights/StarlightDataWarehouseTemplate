@@ -1,4 +1,4 @@
-name: Setup Python
+name: Set up Python
 
 runs:
   using: composite

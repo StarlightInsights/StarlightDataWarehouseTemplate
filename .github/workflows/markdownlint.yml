@@ -16,10 +16,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+      - name: Set up Node
+        uses: ./.github/actions/setup-node
 
       - name: Install markdownlint-cli
         run: npm install -g markdownlint-cli

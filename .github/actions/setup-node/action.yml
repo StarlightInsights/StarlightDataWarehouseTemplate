@@ -1,0 +1,20 @@
+name: Set up Node
+
+runs:
+  using: composite
+
+  steps:
+    - name: Node version from .node-version
+      shell: bash
+      run: |
+        echo "node_version=$(cat .node-version)" >>  "$GITHUB_ENV"
+
+    - name: Print node version
+      shell: bash
+      run: |
+        echo "Node version: ${{ env.node_version }}"
+
+    - name: Set up node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.node_version }}
