@@ -1,7 +1,9 @@
 name: Call Reusable Workflow
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - '**'
 
 jobs:
   use-reusable:
