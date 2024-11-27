@@ -1,0 +1,10 @@
+name: Install Python Dependency
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install SQLFluff
+      shell: bash
+      run: |
+        grep sqlfluff requirements.txt | xargs -n 1 pip install
