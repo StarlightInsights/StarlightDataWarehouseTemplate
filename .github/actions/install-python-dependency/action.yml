@@ -7,6 +7,7 @@ runs:
       shell: bash
       run: |
         grep ${{ inputs.dependency }} requirements.txt | xargs -n 1 pip install
+        pip list | grep ${{ inputs.dependency }}
 
 inputs:
   dependency:
