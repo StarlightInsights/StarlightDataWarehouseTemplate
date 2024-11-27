@@ -8,6 +8,10 @@ runs:
       shell: bash
       run: |
         echo "python_version=$(cat .python-version)" >>  "$GITHUB_ENV"
+
+    - name: Print Python version
+      shell: bash
+      run: |
         echo "Python version: ${{ env.python_version }}"
 
     - name: Set up Python
