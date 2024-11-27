@@ -22,7 +22,6 @@ jobs:
 
       - name: Install yamllint from requirements.txt
         run: |
-          python -m pip install --upgrade pip
           grep yamllint requirements.txt | xargs -n 1 pip install
 
       - name: Lint YAML files on Pull Request
