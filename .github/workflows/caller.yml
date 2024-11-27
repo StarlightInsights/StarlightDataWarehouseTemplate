@@ -1,0 +1,13 @@
+name: Call Reusable Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  use-reusable:
+    uses: ./.github/workflows/reusable.yml
+    with:
+      script: |
+        echo "Line 1"
+        echo "Line 2"
+        echo "Line 3"
