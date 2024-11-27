@@ -21,7 +21,8 @@
 			"extensions": [
 				"davidanson.vscode-markdownlint",
 				"dorzey.vscode-sqlfluff",
-				"innoverio.vscode-dbt-power-user"
+				"innoverio.vscode-dbt-power-user",
+				"github.vscode-github-actions"
 			]
 		}
 	},
