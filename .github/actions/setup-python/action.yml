@@ -1,0 +1,25 @@
+name: Set up Python
+
+runs:
+  using: composite
+
+  steps:
+    - name: Python version from .python-version
+      shell: bash
+      run: |
+        echo "python_version=$(cat .python-version)" >>  "$GITHUB_ENV"
+
+    - name: Print Python version
+      shell: bash
+      run: |
+        echo "Python version: ${{ env.python_version }}"
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.python_version }}
+
+    - name: Update pip
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip

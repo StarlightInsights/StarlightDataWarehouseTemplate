@@ -1,0 +1,15 @@
+name: Install Python Dependency
+
+runs:
+  using: composite
+  steps:
+    - name: Install Dependency
+      shell: bash
+      run: |
+        grep ${{ inputs.dependency }} requirements.txt | xargs -n 1 pip install
+        pip list | grep ${{ inputs.dependency }}
+
+inputs:
+  dependency:
+    description: "The dependency to install"
+    required: true

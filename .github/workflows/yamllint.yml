@@ -18,14 +18,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
+        uses: ./.github/actions/setup-python
 
-      - name: Install yamllint from requirements.txt
-        run: |
-          python -m pip install --upgrade pip
-          grep yamllint requirements.txt | xargs -n 1 pip install
+      - name: Install YAMLlint
+        uses: ./.github/actions/install-python-dependency
+        with:
+          dependency: yamllint
 
       - name: Lint YAML files on Pull Request
         if: github.event_name == 'pull_request'
