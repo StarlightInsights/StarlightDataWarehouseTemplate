@@ -1,6 +1,5 @@
 {
     "dependencies": {
-        "markdownlint-cli": "0.43.0",
-        "@lightdash/cli": "^0.x.x"
+        "markdownlint-cli": "0.43.0"
     }
 }
