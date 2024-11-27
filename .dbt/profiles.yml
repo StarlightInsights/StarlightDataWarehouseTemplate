@@ -25,3 +25,16 @@ starlight:
       schema: datawarehouse
       threads: 16
       client_session_keep_alive: false
+    github:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: github
+      role: github
+      private_key: "{{ env_var('SNOWFLAKE_PRIVATE_KEY') }}"
+      private_key_passphrase: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE') }}"
+      database: "{{ env_var('DATABASE') }}"
+      warehouse: github
+      schema: datawarehouse
+      threads: 16
+      client_session_keep_alive: false
+
