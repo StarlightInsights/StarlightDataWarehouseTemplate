@@ -2,9 +2,13 @@ name: Install Python Dependency
 
 runs:
   using: composite
-
   steps:
-    - name: Install SQLFluff
+    - name: Install Dependency
       shell: bash
       run: |
-        grep sqlfluff requirements.txt | xargs -n 1 pip install
+        grep ${{ inputs.dependency }} requirements.txt | xargs -n 1 pip install
+
+inputs:
+  dependency:
+    description: "The dependency to install"
+    required: true
