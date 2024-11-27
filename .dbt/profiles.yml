@@ -37,4 +37,3 @@ starlight:
       schema: datawarehouse
       threads: 16
       client_session_keep_alive: false
-
