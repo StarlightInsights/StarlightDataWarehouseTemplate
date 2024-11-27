@@ -5,6 +5,7 @@ runs:
 
   steps:
       - name: Python version from .python-version
+        shell: bash
         run: echo "python_version=$(cat .python-version)" >>  "$GITHUB_ENV"
 
       - name: Set up Python
