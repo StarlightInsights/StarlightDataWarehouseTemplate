@@ -3,14 +3,24 @@ name: Reusable Workflow
 on:
   workflow_call:
     inputs:
-      script:
+      commands:
         required: true
+        description: The commands that should run. E.g., `dbt deps`, `dbt run`, `dbt build`.
         type: string
-
+      database:
+        required: false
+        description: The analytical database.
+        default: starlight
+        type: string
+      schema:
+        required: false
+        description: The production schema.
+        default: datawarehouse
+        type: string
 jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
       - name: Execute provided script
         run: |
-          ${{ inputs.script }}
+          ${{ inputs.commands }}

@@ -9,7 +9,7 @@ jobs:
   use-reusable:
     uses: ./.github/workflows/dbt/dbt.yml
     with:
-      script: |
+      commands: |
         echo "Line 1"
         echo "Line 2"
         echo "Line 3"
