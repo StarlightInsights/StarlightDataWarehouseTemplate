@@ -39,7 +39,7 @@ jobs:
 
       - name: Copy profiles.yml
         run: |
-          sudo cp -r .dbt/ /home/"$USERNAME"/
+          sudo cp -r .dbt/ /home/runner/
 
       - name: Execute provided script
         run: |
