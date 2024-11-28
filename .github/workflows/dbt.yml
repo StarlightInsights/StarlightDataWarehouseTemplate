@@ -17,13 +17,6 @@ on:
         description: The production schema.
         default: datawarehouse
         type: string
-    secrets:
-      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
-        required: true
-        description: "The passphrase for the Snowflake private key"
-      SNOWFLAKE_PRIVATE_KEY:
-        required: true
-        description: "The Snowflake private key"
 
 jobs:
   dbt:
