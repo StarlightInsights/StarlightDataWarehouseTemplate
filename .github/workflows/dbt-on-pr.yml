@@ -10,6 +10,6 @@ jobs:
     uses: ./.github/workflows/dbt.yml
     with:
       commands: |
-        echo "Line 1"
-        echo "Line 2"
-        echo "Line 4"
+        cd starlight
+        dbt debug
+        dbt deps
