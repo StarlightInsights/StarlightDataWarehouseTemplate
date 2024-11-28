@@ -6,17 +6,12 @@ on:
       - '*'
 
 jobs:
-  dbt:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        
-      - uses: ./.github/workflows/dbt.yml
-        with:
-          commands: |
-            cd starlight
-            env
-            dbt debug --target github
-            dbt deps --target github
-            echo 1
+  execute-dbt-commands:
+    uses: ./.github/workflows/dbt.yml
+    with:
+      commands: |
+        cd starlight
+        env
+        dbt debug --target github
+        dbt deps --target github
+        echo 1
