@@ -12,7 +12,7 @@ runs:
         done
 
 inputs:
-  dependencies:
+  dependency:
     description: "The dependencies to install (comma-separated)"
     required: true
     type: string
