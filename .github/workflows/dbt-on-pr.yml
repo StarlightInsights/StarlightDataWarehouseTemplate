@@ -7,7 +7,7 @@ on:
 
 jobs:
   use-reusable:
-    uses: ./.github/workflows/dbt/dbt.yml
+    uses: ./.github/workflows/dbt.yml
     with:
       commands: |
         echo "Line 1"
