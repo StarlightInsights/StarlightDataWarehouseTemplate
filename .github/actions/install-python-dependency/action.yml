@@ -1,16 +1,18 @@
-name: Install Python Dependency
+name: Install Python Dependencies
 
 runs:
   using: composite
   steps:
-    - name: Install Dependency
+    - name: Install Dependencies
       shell: bash
       run: |
-        grep ${{ inputs.dependency }} requirements.txt | xargs -n 1 pip install
-        pip list | grep ${{ inputs.dependency }}
+        for dep in "${{ inputs.dependencies }}"; do
+          grep "$dep" requirements.txt | xargs -n 1 pip install
+          pip list | grep "$dep"
+        done
 
 inputs:
-  dependency:
-    description: "The dependency to install"
+  dependencies:
+    description: "The dependencies to install (comma-separated)"
     required: true
     type: string
