@@ -6,13 +6,13 @@ runs:
     - name: Install Dependencies
       shell: bash
       run: |
-        for dep in "${{ inputs.dependencies }}"; do
+        for dep in "${{ inputs.dependencies[@] }}"; do
           grep "$dep" requirements.txt | xargs -n 1 pip install
           pip list | grep "$dep"
         done
 
 inputs:
-  dependency:
-    description: "The dependencies to install (comma-separated)"
+  dependencies:
+    description: "The list of dependencies to install"
     required: true
-    type: string
+    type: array
