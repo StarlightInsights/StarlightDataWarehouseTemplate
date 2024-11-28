@@ -3,14 +3,9 @@ name: Install Python Dependency
 runs:
   using: composite
   steps:
-    - uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ inputs.dependency }}
-
     - name: Install Dependency
       shell: bash
-      run: | 
+      run: |
         grep ${{ inputs.dependency }} requirements.txt | xargs -n 1 pip install
         pip list | grep ${{ inputs.dependency }}
 
