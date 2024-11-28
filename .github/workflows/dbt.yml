@@ -35,7 +35,7 @@ jobs:
       - name: Install dbt-snowflake
         uses: ./.github/actions/install-python-dependency
         with:
-          dependency: dbt-core
+          dependency: dbt-snowflake
 
       - name: Execute provided script
         run: |
