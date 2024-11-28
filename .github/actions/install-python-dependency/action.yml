@@ -10,7 +10,7 @@ runs:
 
     - name: Install Dependency
       shell: bash
-      run: |
+      run: | 
         grep ${{ inputs.dependency }} requirements.txt | xargs -n 1 pip install
         pip list | grep ${{ inputs.dependency }}
 
