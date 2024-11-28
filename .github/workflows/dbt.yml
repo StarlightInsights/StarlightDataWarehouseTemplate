@@ -27,10 +27,10 @@ on:
         default: false
         type: boolean
         description: |
-          Indicates whether to save the `manifest.json` file from the initial commit of the branch. 
-          
+          Indicates whether to save the `manifest.json` file from the initial commit of the branch.
+
           This is useful for pull requests when you want to limit `dbt run` and `dbt test` to only the files that have changed.
-          
+
           E.g. `run --select +state:modified --state ./` and `test --select +state:modified --state ./`.
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
