@@ -37,6 +37,10 @@ jobs:
         with:
           dependency: dbt-snowflake
 
+      - name: Copy profiles.yml
+        run: |
+          sudo cp -r .dbt/ /home/"$USERNAME"/
+
       - name: Execute provided script
         run: |
           ${{ inputs.commands }}
