@@ -11,6 +11,6 @@ jobs:
     with:
       commands: |
         cd starlight
-        dbt debug
-        dbt deps
+        dbt debug --target github
+        dbt deps --target github
         echo 1
