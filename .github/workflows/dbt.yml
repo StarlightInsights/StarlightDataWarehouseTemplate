@@ -50,15 +50,10 @@ jobs:
       - name: Set up Python
         uses: ./.github/actions/setup-python
 
-      - name: Install dbt-core
-        uses: ./.github/actions/install-python-dependency
+      - name: Install dbt-core and dbt-snowflake
+        uses: ./.github/actions/install-python-dependencies
         with:
-          dependency: dbt-core
-
-      - name: Install dbt-snowflake
-        uses: ./.github/actions/install-python-dependency
-        with:
-          dependency: dbt-snowflake
+          dependency: "dbt-core dbt-snowflake"
 
       - name: Copy profiles.yml
         run: |

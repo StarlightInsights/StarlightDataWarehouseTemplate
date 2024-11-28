@@ -20,7 +20,7 @@ jobs:
         uses: ./.github/actions/setup-python
 
       - name: Install SQLFluff
-        uses: ./.github/actions/install-python-dependency
+        uses: ./.github/actions/install-python-dependencies
         with:
           dependency: sqlfluff
 

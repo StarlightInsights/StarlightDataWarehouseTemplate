@@ -21,9 +21,9 @@ jobs:
         uses: ./.github/actions/setup-python
 
       - name: Install YAMLlint
-        uses: ./.github/actions/install-python-dependency
+        uses: ./.github/actions/install-python-dependencies
         with:
-          dependencies: "yamllint sqlfluff"
+          dependencies: "yamllint"
 
       - name: Lint YAML files on Pull Request
         if: github.event_name == 'pull_request'
