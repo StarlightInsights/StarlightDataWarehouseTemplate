@@ -42,5 +42,7 @@ jobs:
           sudo cp -r .dbt/ /home/runner/
 
       - name: Execute provided script
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
         run: |
           ${{ inputs.commands }}
