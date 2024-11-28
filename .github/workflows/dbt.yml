@@ -51,8 +51,8 @@ jobs:
 
       - name: Execute provided script
         env:
-          DATABASE: ${{ vars.database }}
-          SCHEMA: ${{ vars.schema }}
+          DATABASE: ${{ inputs.database }}
+          SCHEMA: ${{ inputs.schema }}
           SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
