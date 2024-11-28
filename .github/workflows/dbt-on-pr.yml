@@ -13,3 +13,4 @@ jobs:
         cd starlight
         dbt debug
         dbt deps
+        echo 1
