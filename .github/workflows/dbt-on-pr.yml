@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  use-reusable:
+  execute-dbt-commands:
     uses: ./.github/workflows/dbt.yml
     with:
       commands: |

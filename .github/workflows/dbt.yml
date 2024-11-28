@@ -1,4 +1,4 @@
-name: Reusable Workflow
+name: dbt
 
 on:
   workflow_call:
@@ -18,7 +18,7 @@ on:
         default: datawarehouse
         type: string
 jobs:
-  run-script:
+  dbt:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
