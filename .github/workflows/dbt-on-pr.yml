@@ -16,7 +16,7 @@ jobs:
         cd starlight
         dbt debug --target github
         dbt deps
-        dbt seeds --target github
+        dbt seed --target github
         dbt run --target github
         dbt test --target github
 
