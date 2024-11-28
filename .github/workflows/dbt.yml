@@ -7,6 +7,11 @@ on:
         required: true
         description: The commands that should run. E.g., `dbt deps`, `dbt run --target github`, `dbt build --target github`.
         type: string
+      project-folder:
+        required: false
+        description: The folder that holds the dbt project.
+        default: starlight
+        type: string
       database:
         required: false
         description: The analytical database.
@@ -57,4 +62,5 @@ jobs:
           SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         run: |
+          cd ${{ inputs.project-folder }}
           ${{ inputs.commands }}

@@ -13,10 +13,8 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
       commands: |
-        cd starlight
         dbt debug --target github
         dbt deps
         dbt seed --target github
         dbt run --target github
         dbt test --target github
-
