@@ -53,7 +53,7 @@ jobs:
       - name: Install dbt-core and dbt-snowflake
         uses: ./.github/actions/install-python-dependencies
         with:
-          dependency: "dbt-core dbt-snowflake"
+          dependencies: "dbt-core dbt-snowflake"
 
       - name: Copy profiles.yml
         run: |

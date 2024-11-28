@@ -22,7 +22,7 @@ jobs:
       - name: Install SQLFluff
         uses: ./.github/actions/install-python-dependencies
         with:
-          dependency: sqlfluff
+          dependencies: sqlfluff
 
       - name: Lint SQL files on Pull Request
         if: github.event_name == 'pull_request'
