@@ -21,6 +21,22 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: ./.github/actions/setup-python
+
+      - name: Install dbt-core
+        uses: ./.github/actions/install-python-dependency
+        with:
+          dependency: dbt-core
+
+      - name: Install dbt-snowflake
+        uses: ./.github/actions/install-python-dependency
+        with:
+          dependency: dbt-core
+
       - name: Execute provided script
         run: |
           ${{ inputs.commands }}
