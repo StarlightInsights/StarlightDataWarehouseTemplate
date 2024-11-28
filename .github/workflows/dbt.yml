@@ -1,0 +1,66 @@
+name: dbt
+
+on:
+  workflow_call:
+    inputs:
+      commands:
+        required: true
+        description: The commands that should run. E.g., `dbt deps`, `dbt run --target github`, `dbt build --target github`.
+        type: string
+      project-folder:
+        required: false
+        description: The folder that holds the dbt project.
+        default: starlight
+        type: string
+      database:
+        required: false
+        description: The analytical database.
+        default: starlight
+        type: string
+      schema:
+        required: false
+        description: The production schema.
+        default: datawarehouse
+        type: string
+    secrets:
+      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
+        required: true
+        description: The passphrase for the Snowflake private key.
+      SNOWFLAKE_PRIVATE_KEY:
+        required: true
+        description: The Snowflake private key.
+
+jobs:
+  dbt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: ./.github/actions/setup-python
+
+      - name: Install dbt-core
+        uses: ./.github/actions/install-python-dependency
+        with:
+          dependency: dbt-core
+
+      - name: Install dbt-snowflake
+        uses: ./.github/actions/install-python-dependency
+        with:
+          dependency: dbt-snowflake
+
+      - name: Copy profiles.yml
+        run: |
+          sudo cp -r .dbt/ /home/runner/
+
+      - name: Execute provided script
+        env:
+          DATABASE: ${{ inputs.database }}
+          SCHEMA: ${{ inputs.schema }}
+          SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
+          SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: |
+          cd ${{ inputs.project-folder }}
+          ${{ inputs.commands }}

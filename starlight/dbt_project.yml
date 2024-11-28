@@ -1,6 +1,6 @@
-name: 'starlight'
+name: starlight
 
-profile: 'starlight'
+profile: starlight
 
 model-paths: ["models"]
 seed-paths: ["seeds"]

@@ -1,0 +1,20 @@
+name: dbt on PR
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  execute-dbt-commands:
+    uses: ./.github/workflows/dbt.yml
+    secrets:
+      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
+      SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+    with:
+      commands: |
+        dbt debug --target github
+        dbt deps
+        dbt seed --target github
+        dbt run --target github
+        dbt test --target github
