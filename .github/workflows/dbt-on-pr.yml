@@ -8,6 +8,9 @@ on:
 jobs:
   execute-dbt-commands:
     uses: ./.github/workflows/dbt.yml
+    secrets:
+      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
+      SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
       commands: |
         cd starlight

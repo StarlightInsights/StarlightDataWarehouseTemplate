@@ -17,6 +17,13 @@ on:
         description: The production schema.
         default: datawarehouse
         type: string
+      secrets:
+        SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
+          required: true
+          description: The passphrase for the Snowflake private key.
+        SNOWFLAKE_PRIVATE_KEY:
+          required: true
+          description: The Snowflake private key.
 
 jobs:
   dbt:
@@ -47,6 +54,5 @@ jobs:
           SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
-          DATABASE: ${{ inputs.database }}
         run: |
           ${{ inputs.commands }}
