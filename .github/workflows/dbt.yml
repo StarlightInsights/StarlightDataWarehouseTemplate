@@ -36,11 +36,9 @@ on:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
         required: true
         description: The passphrase for the Snowflake private key.
-        type: string
       SNOWFLAKE_PRIVATE_KEY:
         required: true
         description: The Snowflake private key.
-        type: string
 
 jobs:
   dbt:
