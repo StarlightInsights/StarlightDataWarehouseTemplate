@@ -22,6 +22,16 @@ on:
         description: The production schema.
         default: datawarehouse
         type: string
+      with-initial-manifest:
+        required: false
+        description: |
+          Indicates whether to save the `manifest.json` file from the initial commit of the branch. 
+          
+          This is useful for pull requests when you want to limit `dbt run` and `dbt test` to only the files that have changed.
+          
+          E.g. `run --select +state:modified --state ./` and `test --select +state:modified --state ./`.
+        default: false
+        type: boolean
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
         required: true
