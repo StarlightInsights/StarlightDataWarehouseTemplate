@@ -5,7 +5,7 @@ on:
     inputs:
       commands:
         required: true
-        description: The commands that should run. E.g., `dbt deps`, `dbt run`, `dbt build`.
+        description: The commands that should run. E.g., `dbt deps`, `dbt run --target github`, `dbt build --target github`.
         type: string
       database:
         required: false
@@ -51,6 +51,8 @@ jobs:
 
       - name: Execute provided script
         env:
+          DATABASE: ${{ vars.database }}
+          SCHEMA: ${{ vars.schema }}
           SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}

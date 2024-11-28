@@ -34,6 +34,6 @@ starlight:
       private_key_passphrase: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE') }}"
       database: "{{ env_var('DATABASE') }}"
       warehouse: github
-      schema: datawarehouse
+      schema: "{{ env_var('SCHEMA') }}"
       threads: 16
       client_session_keep_alive: false
