@@ -13,3 +13,4 @@ inputs:
   dependency:
     description: "The npm package to install"
     required: true
+    type: string
