@@ -22,7 +22,7 @@ jobs:
       - name: Install markdownlint
         uses: ./.github/actions/install-node-dependencies
         with:
-          dependencies: "markdownlint-cli @lightdash/cli"
+          dependencies: "markdownlint-cli"
 
       - name: Lint Markdown files on Pull Request
         if: github.event_name == 'pull_request'
