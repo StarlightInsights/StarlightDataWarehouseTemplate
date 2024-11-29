@@ -1,0 +1,82 @@
+
+name: dbt
+
+on:
+  workflow_call:
+    inputs:
+      commands:
+        required: true
+        description: The commands that should run. E.g., `dbt deps`, `dbt run --target github`, `dbt build --target github`.
+        type: string
+      project-folder:
+        required: false
+        description: The folder that holds the dbt project.
+        default: starlight
+        type: string
+      database:
+        required: false
+        description: The analytical database.
+        default: starlight
+        type: string
+      schema:
+        required: false
+        description: The production schema.
+        default: datawarehouse
+        type: string
+      with-initial-manifest:
+        required: false
+        default: false
+        type: boolean
+        description: |
+          Indicates whether to save the `manifest.json` file from the initial commit of the branch.
+
+          This is useful for pull requests when you want to limit `dbt run` and `dbt test` to only the files that have changed.
+
+          E.g. `run --select +state:modified --state ./` and `test --select +state:modified --state ./`.
+    secrets:
+      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
+        required: true
+        description: The passphrase for the Snowflake private key.
+      SNOWFLAKE_PRIVATE_KEY:
+        required: true
+        description: The Snowflake private key.
+
+jobs:
+  dbt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: ./.github/actions/setup-python
+
+      - name: Install dbt-core and dbt-snowflake
+        uses: ./.github/actions/install-python-dependencies
+        with:
+          dependencies: "dbt-core dbt-snowflake"
+
+      - name: Copy profiles.yml
+        run: |
+          sudo cp -r .dbt/ /home/runner/
+
+      - name: Execute provided script
+        env:
+          DATABASE: ${{ inputs.database }}
+          SCHEMA: ${{ inputs.schema }}
+          SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
+          SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: |
+          cd ${{ inputs.project-folder }}
+          dbt compile
+
+      - name: Upload manifest.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest-${{ github.event.pull_request.number }}
+          path: ${{ inputs.project-folder }}/target/manifest.json
+          retention-days: 1
