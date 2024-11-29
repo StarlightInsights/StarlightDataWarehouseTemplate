@@ -1,4 +1,4 @@
-name: Save dbt manifest
+name: dbt-save-manifest.yml
 
 on:
   workflow_call:
@@ -27,22 +27,8 @@ on:
         description: The Snowflake private key.
 
 jobs:
-  check-manifest:
-    runs-on: ubuntu-latest
-    outputs:
-      should_compile: ${{ steps.check_exists.outcome == 'failure' }}
-    steps:
-      - name: Check for existing manifest
-        id: check_exists
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: manifest-pr${{ github.event.pull_request.number }}-base
-          path: /dev/null
-
-  compile-manifest:
-    needs: check-manifest
-    if: needs.check-manifest.outputs.should_compile == 'true'
+  manifest:
+    name: Handle DBT manifest
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -51,18 +37,29 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           fetch-depth: 1
 
+      - name: Check manifest cache
+        id: check-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ inputs.project-folder }}/target/manifest.json
+          key: dbt-manifest-${{ github.ref_name }}
+
       - name: Set up Python
+        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: ./.github/actions/setup-python
 
       - name: Install dbt dependencies
+        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: ./.github/actions/install-python-dependencies
         with:
           dependencies: "dbt-core dbt-snowflake"
 
       - name: Setup dbt profile
+        if: steps.check-cache.outputs.cache-hit != 'true'
         run: sudo cp -r .dbt/ /home/runner/
 
       - name: Generate manifest
+        if: steps.check-cache.outputs.cache-hit != 'true'
         env:
           DATABASE: ${{ inputs.database }}
           SCHEMA: ${{ inputs.schema }}
@@ -70,11 +67,21 @@ jobs:
           SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         working-directory: ${{ inputs.project-folder }}
-        run: dbt compile
+        run: |
+          dbt deps
+          dbt compile --target github
 
-      - name: Upload manifest
+      - name: Upload manifest artifact
+        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: manifest-pr${{ github.event.pull_request.number }}-base
+          name: manifest-${{ github.ref_name }}
           path: ${{ inputs.project-folder }}/target/manifest.json
-          retention-days: 1
+          retention-days: 90
+
+      - name: Cache manifest
+        if: steps.check-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ inputs.project-folder }}/target/manifest.json
+          key: dbt-manifest-${{ github.ref_name }}

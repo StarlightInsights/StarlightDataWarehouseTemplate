@@ -1,4 +1,4 @@
-name: dbt on PR
+name: DBT on PR
 
 on:
   push:
@@ -6,12 +6,14 @@ on:
       - '*'
 
 jobs:
-  execute-dbt-commands:
+  dbt:
+    name: DBT
     uses: ./.github/workflows/dbt.yml
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
+      with-initial-manifest: true
       commands: |
         dbt debug --target github
         dbt deps
