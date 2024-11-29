@@ -1,12 +1,8 @@
-name: dbt
+name: Save dbt manifest
 
 on:
   workflow_call:
     inputs:
-      commands:
-        required: true
-        description: The commands that should run. E.g., `dbt deps`, `dbt run --target github`, `dbt build --target github`.
-        type: string
       project-folder:
         required: false
         description: The folder that holds the dbt project.
@@ -22,16 +18,6 @@ on:
         description: The production schema.
         default: datawarehouse
         type: string
-      with-initial-manifest:
-        required: false
-        default: false
-        type: boolean
-        description: |
-          Indicates whether to save the `manifest.json` file from the initial commit of the branch.
-
-          This is useful for pull requests when you want to limit `dbt run` and `dbt test` to only the files that have changed.
-
-          E.g. `run --select +state:modified --state ./` and `test --select +state:modified --state ./`.
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
         required: true
@@ -41,37 +27,54 @@ on:
         description: The Snowflake private key.
 
 jobs:
-  execute-dbt-commands:
-    uses: ./.github/workflows/dbt-save-manifest.yml
-    secrets:
-      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
-      SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+  check-manifest:
+    runs-on: ubuntu-latest
+    outputs:
+      should_compile: ${{ steps.check_exists.outcome == 'failure' }}
+    steps:
+      - name: Check for existing manifest
+        id: check_exists
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: manifest-pr${{ github.event.pull_request.number }}-base
+          path: /dev/null
 
-  dbt:
+  compile-manifest:
+    needs: check-manifest
+    if: needs.check-manifest.outputs.should_compile == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 1
 
       - name: Set up Python
         uses: ./.github/actions/setup-python
 
-      - name: Install dbt-core and dbt-snowflake
+      - name: Install dbt dependencies
         uses: ./.github/actions/install-python-dependencies
         with:
           dependencies: "dbt-core dbt-snowflake"
 
-      - name: Copy profiles.yml
-        run: |
-          sudo cp -r .dbt/ /home/runner/
+      - name: Setup dbt profile
+        run: sudo cp -r .dbt/ /home/runner/
 
-      - name: Execute provided script
+      - name: Generate manifest
         env:
           DATABASE: ${{ inputs.database }}
           SCHEMA: ${{ inputs.schema }}
           SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
-        run: |
-          cd ${{ inputs.project-folder }}
-          ${{ inputs.commands }}
+        working-directory: ${{ inputs.project-folder }}
+        run: dbt compile
+
+      - name: Upload manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest-pr${{ github.event.pull_request.number }}-base
+          path: ${{ inputs.project-folder }}/target/manifest.json
+          retention-days: 1
