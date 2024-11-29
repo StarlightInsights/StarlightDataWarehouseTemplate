@@ -75,7 +75,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: manifest-${{ github.event.pull_request.number }}
-          path: ${{ vars.DBT_PROJECT_FOLDER }}/
+          path: ${{ inputs.project-folder }}/target/manifest.json
 
       - name: Execute provided script
         env:
