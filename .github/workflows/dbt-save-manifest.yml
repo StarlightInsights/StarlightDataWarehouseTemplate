@@ -82,7 +82,7 @@ jobs:
           path: ${{ inputs.project-folder }}/target/manifest.json
           retention-days: 90
 
-      - name: Cache manifest for check
+      - name: Cache manifest for chec
         uses: actions/cache/save@v4
         with:
           path: manifest.json
