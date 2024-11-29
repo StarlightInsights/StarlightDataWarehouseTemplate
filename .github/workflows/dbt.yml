@@ -70,12 +70,22 @@ jobs:
         run: |
           sudo cp -r .dbt/ /home/runner/
 
-      - name: Download manifest.json
+  #   - name: Download manifest.json
+  #     if: ${{ inputs.with-initial-manifest == true }}
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: manifest-${{ github.event.pull_request.number }}
+  #       path: ${{ inputs.project-folder }}/target/manifest.json
+
+      - name: Restore manifest from cache
         if: ${{ inputs.with-initial-manifest == true }}
-        uses: actions/download-artifact@v4
+        uses: actions/cache@v4
         with:
-          name: manifest-${{ github.event.pull_request.number }}
           path: ${{ inputs.project-folder }}/target/manifest.json
+          key: manifest-${{ github.event.pull_request.number }}
+          restore-keys: |
+            manifest-
+        
 
       - name: Execute provided script
         env:
