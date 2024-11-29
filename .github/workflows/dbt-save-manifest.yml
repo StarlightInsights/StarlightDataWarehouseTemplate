@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ inputs.project-folder }}/target/manifest.json
-          key: dbt-manifest-${{ github.ref_name }}
+          key: dbt-manifest-${{ github.event.pull_request.number }}
 
       - name: Set up Python
         if: steps.check-cache.outputs.cache-hit != 'true'
@@ -75,7 +75,7 @@ jobs:
         if: steps.check-cache.outputs.cache-hit != 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: manifest-${{ github.ref_name }}
+          name: manifest-${{ github.event.pull_request.number }}
           path: ${{ inputs.project-folder }}/target/manifest.json
           retention-days: 90
 
@@ -84,4 +84,4 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ inputs.project-folder }}/target/manifest.json
-          key: dbt-manifest-${{ github.ref_name }}
+          key: dbt-manifest-${{ github.event.pull_request.number }}
