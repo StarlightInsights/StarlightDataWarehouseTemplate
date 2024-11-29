@@ -75,8 +75,15 @@ jobs:
           dbt deps
           dbt compile --target github
 
-      - name: Cache manifest
+      - name: Upload manifest artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest-${{ github.ref_name }}
+          path: ${{ inputs.project-folder }}/target/manifest.json
+          retention-days: 90
+
+      - name: Cache manifest for check
         uses: actions/cache/save@v4
         with:
-          path: ${{ inputs.project-folder }}/target/manifest.json
+          path: manifest.json
           key: dbt-manifest-${{ github.ref_name }}
