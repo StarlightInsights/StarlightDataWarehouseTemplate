@@ -1,4 +1,4 @@
-name: YAMLLint
+name: Yamllint
 
 on:
   pull_request:
@@ -11,6 +11,7 @@ on:
 
 jobs:
   lint:
+    name: Install and run Yamllint
     runs-on: ubuntu-latest
 
     steps:
@@ -20,10 +21,10 @@ jobs:
       - name: Set up Python
         uses: ./.github/actions/setup-python
 
-      - name: Install YAMLlint
-        uses: ./.github/actions/install-python-dependency
+      - name: Install Yamllint
+        uses: ./.github/actions/install-python-dependencies
         with:
-          dependency: yamllint
+          dependencies: "yamllint"
 
       - name: Lint YAML files on Pull Request
         if: github.event_name == 'pull_request'

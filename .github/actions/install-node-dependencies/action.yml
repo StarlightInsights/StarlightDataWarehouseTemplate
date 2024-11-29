@@ -1,0 +1,18 @@
+name: Install Node Dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        for dep in ${{ inputs.dependencies }}; do
+          jq -r --arg dep "$dep" '.dependencies[$dep] // .devDependencies[$dep]' package.json | xargs -I {} npm install -g "$dep@{}"
+          npm list -g "$dep"
+        done
+
+inputs:
+  dependencies:
+    description: "The npm packages to install (space-separated)"
+    required: true
+    type: string
