@@ -73,6 +73,7 @@ jobs:
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         working-directory: ${{ inputs.project-folder }}
         run: |
+          pwd
           cd ${{ inputs.project-folder }}
           dbt deps
           dbt compile --target github

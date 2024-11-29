@@ -41,7 +41,7 @@ on:
         description: The Snowflake private key.
 
 jobs:
-  manifest:
+  manifest:  # TODO: add all the variables and set a boolean that allow the user not to run the manifest
     name: Set up DBT and run commands
     uses: ./.github/workflows/dbt-save-manifest.yml
     secrets:
