@@ -1,0 +1,1 @@
+select id as id as id
