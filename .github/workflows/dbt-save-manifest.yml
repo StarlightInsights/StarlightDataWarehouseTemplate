@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ inputs.project-folder }}/target/manifest.json
-          key: dbt-manifest-${{ github.event.pull_request.number }}
+          key: manifest-${{ github.event.pull_request.number }}
 
       - name: Set up Python
         if: steps.check-cache.outputs.cache-hit != 'true'
@@ -87,9 +87,9 @@ jobs:
 
 
 
-      - name: Cache manifest
-        if: steps.check-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ inputs.project-folder }}/target/manifest.json
-          key: dbt-manifest-${{ github.event.pull_request.number }}
+   #   - name: Cache manifest
+   #     if: steps.check-cache.outputs.cache-hit != 'true'
+   #     uses: actions/cache/save@v4
+   #     with:
+   #       path: ${{ inputs.project-folder }}/target/manifest.json
+   #       key: dbt-manifest-${{ github.event.pull_request.number }}
