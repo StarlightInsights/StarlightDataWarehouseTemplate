@@ -6,8 +6,8 @@ on:
       - '*'
 
 jobs:
-  dbt-commands:
-    name: DBT commands
+  dbt:
+    name: DBT
     uses: ./.github/workflows/dbt.yml
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
