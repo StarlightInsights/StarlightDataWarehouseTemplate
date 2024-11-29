@@ -33,11 +33,14 @@ jobs:
     outputs:
       should_compile: ${{ steps.check-cache.outputs.cache-hit != 'true' }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Check manifest cache
         id: check-cache
         uses: actions/cache/restore@v4
         with:
-          path: manifest.json
+          path: ${{ inputs.project-folder }}/target/manifest.json
           key: dbt-manifest-${{ github.ref_name }}
 
   compile-manifest:
@@ -82,8 +85,8 @@ jobs:
           path: ${{ inputs.project-folder }}/target/manifest.json
           retention-days: 90
 
-      - name: Cache manifest for chec
+      - name: Cache manifest
         uses: actions/cache/save@v4
         with:
-          path: manifest.json
+          path: ${{ inputs.project-folder }}/target/manifest.json
           key: dbt-manifest-${{ github.ref_name }}
