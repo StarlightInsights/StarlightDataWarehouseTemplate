@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node
         uses: ./.github/actions/setup-node
 
-      - name: Install markdownlint
+      - name: Install MarkdownLint
         uses: ./.github/actions/install-node-dependencies
         with:
           dependencies: "markdownlint-cli"
