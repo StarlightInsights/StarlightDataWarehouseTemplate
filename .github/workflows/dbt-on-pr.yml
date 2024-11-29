@@ -1,9 +1,8 @@
 name: DBT on PR
 
 on:
-  push:
-    branches:
-      - '*'
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   dbt:
@@ -14,7 +13,7 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
       with-initial-manifest: true
-      schema: "pr_${{ github.ref_name }}"
+      schema: "pr_${{ github.event.pull_request.number }}"
       commands: |
         dbt debug --target github
         dbt deps
