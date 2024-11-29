@@ -19,4 +19,4 @@ jobs:
     with:
       commands: |
         dbt deps
-        dbt run-operation drop_schema --args '{"schema_name": "something"}' --target github
+        dbt run-operation run_query --args '{"sql": "drop schema if exists something;"}'
