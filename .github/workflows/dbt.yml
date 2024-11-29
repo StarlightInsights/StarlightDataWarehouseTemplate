@@ -1,4 +1,4 @@
-name: DBT commands
+name: dbt.yml
 
 on:
   workflow_call:
@@ -41,7 +41,7 @@ on:
         description: The Snowflake private key.
 
 jobs:
-  execute-dbt-commands:
+  manifest:
     name: Set up DBT and run commands
     uses: ./.github/workflows/dbt-save-manifest.yml
     secrets:
@@ -49,6 +49,7 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
 
   dbt:
+    needs: manifest
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
