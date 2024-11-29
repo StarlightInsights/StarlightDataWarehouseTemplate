@@ -41,6 +41,12 @@ on:
         description: The Snowflake private key.
 
 jobs:
+  execute-dbt-commands:
+    uses: ./.github/workflows/dbt-save-manifest.yml
+    secrets:
+      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
+      SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+
   dbt:
     runs-on: ubuntu-latest
     steps:
