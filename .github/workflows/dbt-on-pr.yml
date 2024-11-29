@@ -16,6 +16,6 @@ jobs:
       commands: |
         dbt debug --target github
         dbt deps
-        dbt seed --target github 
+        dbt seed --target github
         dbt run --target github
         dbt test --target github

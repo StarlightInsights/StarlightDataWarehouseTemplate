@@ -28,7 +28,7 @@ on:
 
 jobs:
   check-manifest:
-    name: Check if initial manifest.json has been saved 
+    name: Check if initial manifest.json has been saved
     runs-on: ubuntu-latest
     outputs:
       should_compile: ${{ steps.check_exists.outcome == 'failure' }}
