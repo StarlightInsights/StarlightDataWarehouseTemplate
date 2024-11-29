@@ -41,7 +41,7 @@ jobs:
           key: dbt-manifest-${{ github.ref_name }}
 
   compile-manifest:
-    name: Compile manifest
+    name: Compile manifest 
     needs: check-manifest
     if: needs.check-manifest.outputs.should_compile == 'true'
     runs-on: ubuntu-latest
