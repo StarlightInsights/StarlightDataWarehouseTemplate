@@ -31,15 +31,14 @@ jobs:
     name: Manifest exists
     runs-on: ubuntu-latest
     outputs:
-      should_compile: ${{ steps.check_exists.outcome == 'failure' }}
+      should_compile: ${{ steps.check-cache.outputs.cache-hit != 'true' }}
     steps:
-      - name: Check for existing manifest
-        id: check_exists
-        uses: actions/download-artifact@v4
-        continue-on-error: true
+      - name: Check manifest cache
+        id: check-cache
+        uses: actions/cache/restore@v4
         with:
-          name: manifest-${{ github.ref_name }}-base
-          path: /dev/null
+          path: manifest.json
+          key: dbt-manifest-${{ github.ref_name }}
 
   compile-manifest:
     name: Compile manifest
@@ -76,9 +75,8 @@ jobs:
           dbt deps
           dbt compile --target github
 
-      - name: Upload manifest
-        uses: actions/upload-artifact@v4
+      - name: Cache manifest
+        uses: actions/cache/save@v4
         with:
-          name: manifest-${{ github.ref_name }}-base
           path: ${{ inputs.project-folder }}/target/manifest.json
-          retention-days: 1
+          key: dbt-manifest-${{ github.ref_name }}
