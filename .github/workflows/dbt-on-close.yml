@@ -1,4 +1,4 @@
-name: DBT on PR
+name: DBT on PR close
 
 on:
   pull_request:
@@ -17,6 +17,5 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
-      with-initial-manifest: true
       commands: |
         dbt dbt run-operation drop_schema --args '{schema_name: something}' --target github
