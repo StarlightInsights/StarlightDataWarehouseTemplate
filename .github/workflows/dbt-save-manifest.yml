@@ -28,6 +28,7 @@ on:
 
 jobs:
   check-manifest:
+    name: Check if initial manifest.json has been saved 
     runs-on: ubuntu-latest
     outputs:
       should_compile: ${{ steps.check_exists.outcome == 'failure' }}
@@ -41,6 +42,7 @@ jobs:
           path: /dev/null
 
   compile-manifest:
+    name: Compile manifest.json
     needs: check-manifest
     if: needs.check-manifest.outputs.should_compile == 'true'
     runs-on: ubuntu-latest
