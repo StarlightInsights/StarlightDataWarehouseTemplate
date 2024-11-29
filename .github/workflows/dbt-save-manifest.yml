@@ -27,26 +27,8 @@ on:
         description: The Snowflake private key.
 
 jobs:
-  check-manifest:
-    name: Manifest exists
-    runs-on: ubuntu-latest
-    outputs:
-      should_compile: ${{ steps.check-cache.outputs.cache-hit != 'true' }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check manifest cache
-        id: check-cache
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ inputs.project-folder }}/target/manifest.json
-          key: dbt-manifest-${{ github.ref_name }}
-
-  compile-manifest:
-    name: Compile manifest
-    needs: check-manifest
-    if: needs.check-manifest.outputs.should_compile == 'true'
+  manifest:
+    name: Handle DBT manifest
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -55,18 +37,29 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           fetch-depth: 1
 
+      - name: Check manifest cache
+        id: check-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ inputs.project-folder }}/target/manifest.json
+          key: dbt-manifest-${{ github.ref_name }}
+
       - name: Set up Python
+        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: ./.github/actions/setup-python
 
       - name: Install dbt dependencies
+        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: ./.github/actions/install-python-dependencies
         with:
           dependencies: "dbt-core dbt-snowflake"
 
       - name: Setup dbt profile
+        if: steps.check-cache.outputs.cache-hit != 'true'
         run: sudo cp -r .dbt/ /home/runner/
 
       - name: Generate manifest
+        if: steps.check-cache.outputs.cache-hit != 'true'
         env:
           DATABASE: ${{ inputs.database }}
           SCHEMA: ${{ inputs.schema }}
@@ -79,6 +72,7 @@ jobs:
           dbt compile --target github
 
       - name: Upload manifest artifact
+        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: manifest-${{ github.ref_name }}
@@ -86,6 +80,7 @@ jobs:
           retention-days: 90
 
       - name: Cache manifest
+        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
           path: ${{ inputs.project-folder }}/target/manifest.json
