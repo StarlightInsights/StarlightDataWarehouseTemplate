@@ -50,6 +50,7 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
 
   dbt:
+    name: Set up and run DBT commands
     needs: [manifest]
     if: ${{ always() }}
     runs-on: ubuntu-latest
