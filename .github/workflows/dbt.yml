@@ -41,15 +41,17 @@ on:
         description: The Snowflake private key.
 
 jobs:
-  manifest:  # TODO: add all the variables and set a boolean that allow the user not to run the manifest
+  manifest:
     name: Manifest
+    if: ${{ inputs.with-initial-manifest == true }}
     uses: ./.github/workflows/dbt-save-manifest.yml
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
 
   dbt:
-    needs: manifest
+    needs: [manifest]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
