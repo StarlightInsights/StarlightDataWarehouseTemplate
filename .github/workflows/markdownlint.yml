@@ -20,9 +20,9 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Install markdownlint
-        uses: ./.github/actions/install-node-dependency
+        uses: ./.github/actions/install-node-dependencies
         with:
-          dependency: markdownlint-cli
+          dependencies: markdownlint-cli
 
       - name: Lint Markdown files on Pull Request
         if: github.event_name == 'pull_request'
