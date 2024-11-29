@@ -18,4 +18,4 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
       commands: |
-        dbt dbt run-operation drop_schema --args '{schema_name: something}' --target github
+        dbt run-operation drop_schema --args '{schema_name: something}' --target github
