@@ -70,6 +70,13 @@ jobs:
         run: |
           sudo cp -r .dbt/ /home/runner/
 
+      - name: Download manifest.json
+        if: ${{ inputs.with-initial-manifest == true }}
+        uses: actions/download-artifact@v4
+        with:
+          name: manifest-${{ github.event.pull_request.number }}
+          path: ${{ vars.DBT_PROJECT_FOLDER }}/
+
       - name: Execute provided script
         env:
           DATABASE: ${{ inputs.database }}
