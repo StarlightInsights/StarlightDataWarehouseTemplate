@@ -72,7 +72,10 @@ jobs:
           SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         working-directory: ${{ inputs.project-folder }}
-        run: dbt compile --target github
+        run: |
+          cd ${{ inputs.project-folder }}
+          dbt deps
+          dbt compile --target github
 
       - name: Upload manifest
         uses: actions/upload-artifact@v4
