@@ -42,7 +42,7 @@ on:
 
 jobs:
   manifest:  # TODO: add all the variables and set a boolean that allow the user not to run the manifest
-    name: Set up DBT and run commands
+    name: Manifest
     uses: ./.github/workflows/dbt-save-manifest.yml
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
