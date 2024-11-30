@@ -101,6 +101,16 @@ jobs:
           key: manifest-${{ github.event.pull_request.number }}
           restore-keys: |
             manifest-
+            
+      - name: Debug: Print the first line of manifest.json
+        if: ${{ inputs.with-initial-manifest == true }}
+        run: |
+          if [ -f "${{ inputs.project-folder }}/target/manifest.json" ]; then
+            echo "Manifest.json exists. First line:"
+            head -n 1 "${{ inputs.project-folder }}/target/manifest.json"
+          else
+            echo "Manifest.json does not exist."
+          fi
 
       - name: Execute Provided Commands
         env:
