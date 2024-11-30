@@ -76,6 +76,7 @@ jobs:
   dbt:
     name: Set up and Run DBT
     needs: [check-cache, manifest]
+    if: ${{ always() }} # Ensures it always runs, even if other jobs are skipped
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
