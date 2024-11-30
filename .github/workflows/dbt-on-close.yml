@@ -18,4 +18,4 @@ jobs:
       commands: |
         dbt deps
         dbt build --target github
-        dbt run-operation run_query --args '{"sql": "drop schema if exists pr_${{ github.event.pull_request.number }};"}'
+        dbt run-operation run_query --args '{"sql": "drop schema if exists pr_${{ github.event.pull_request.number }};"}' --target github
