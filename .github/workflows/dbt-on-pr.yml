@@ -20,5 +20,4 @@ jobs:
       schema: "pr_${{ github.event.pull_request.number }}"
       commands: |
         dbt deps
-        dbt run --select +state:modified+ --state ./ --target github
-        dbt test --select state:modified+ --state ./ --target github
+        dbt build --select state:modified+ --state ./ --target github
