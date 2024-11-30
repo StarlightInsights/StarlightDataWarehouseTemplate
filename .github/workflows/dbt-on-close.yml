@@ -3,9 +3,7 @@ name: DBT on PR close
 on:
   pull_request:
     types:
-      - opened
-      - reopened
-      - synchronize
+      - closed
     paths:
       - starlight/**
 
@@ -19,4 +17,5 @@ jobs:
     with:
       commands: |
         dbt deps
-        dbt run-operation run_query --args '{"sql": "drop schema if exists something;"}'
+        dbt build --target github
+        dbt run-operation run_query --args '{"sql": "drop schema if exists pr_${{ github.event.pull_request.number }};"}'
