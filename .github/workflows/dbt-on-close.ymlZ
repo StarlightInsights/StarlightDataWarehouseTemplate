@@ -1,8 +1,13 @@
-name: DBT on PR
+name: DBT on PR close
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - starlight/**
 
 jobs:
   dbt:
@@ -12,11 +17,6 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
-      with-initial-manifest: true
-      schema: "pr_${{ github.event.pull_request.number }}"
       commands: |
-        dbt debug --target github
         dbt deps
-        dbt seed --target github
-        dbt run --target github
-        dbt test --target github
+        dbt run-operation run_query --args '{"sql": "drop schema if exists something;"}'

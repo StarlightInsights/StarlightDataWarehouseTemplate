@@ -1,8 +1,9 @@
-name: DBT on PR
+name: DBT Manual Run
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+concurrency: production
 
 jobs:
   dbt:
@@ -12,8 +13,6 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
-      with-initial-manifest: true
-      schema: "pr_${{ github.event.pull_request.number }}"
       commands: |
         dbt debug --target github
         dbt deps
