@@ -1,11 +1,10 @@
 {
-    // Sets 'scrollback' to 5000 lines in the integrated terminal. 'Scrollback' refers to the number
-    // of lines preserved in the terminal's history, allowing you to scroll back and view more past output.
-    // This can be especially helpful during debugging.
     "terminal.integrated.scrollback": 5000,
     "workbench.colorTheme": "Default Dark+",
+    "git.autofetch": true,
     "[yaml]": {
-        "editor.tabSize": 2 // Sets the tab size to 2 spaces for YAML files (.yaml and .yml)
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true
     },
     "[markdown]": {
         "editor.wordWrap": "off",
