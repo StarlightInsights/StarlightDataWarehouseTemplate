@@ -21,5 +21,5 @@ jobs:
       commands: |
         dbt deps
         dbt seed --target github
-        dbt run --target github
-        dbt test --target github
+        dbt run --select +state:modified+ --state ./ --target github
+        dbt test --select state:modified+ --state ./ --target github
