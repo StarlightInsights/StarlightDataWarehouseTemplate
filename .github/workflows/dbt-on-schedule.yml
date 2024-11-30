@@ -1,4 +1,4 @@
-name: DBT on PR close
+name: DBT on schedule
 
 on:
   workflow_dispatch:

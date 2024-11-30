@@ -16,3 +16,9 @@ models:
         data_tests:
           - unique
           - not_null
+  - name: some_model
+    columns:
+      - name: number
+        data_tests:
+          - unique
+          - not_null

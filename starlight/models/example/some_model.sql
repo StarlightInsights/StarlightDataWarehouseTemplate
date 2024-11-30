@@ -1,1 +1,2 @@
-select 1 as id
+select number
+from {{ ref('numbers') }}
