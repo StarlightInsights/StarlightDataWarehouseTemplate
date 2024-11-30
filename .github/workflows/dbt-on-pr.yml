@@ -4,6 +4,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+concurrency: pr-${{ github.event.pull_request.number }}
+
 jobs:
   dbt:
     name: DBT
