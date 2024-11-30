@@ -6,7 +6,7 @@ on:
       commands:
         required: true
         description: |
-          The commands that should run. 
+          The commands that should run.
           E.g., `dbt deps`, `dbt run --target github`, `dbt build --target github`.
         type: string
       project-folder:
@@ -76,7 +76,7 @@ jobs:
   dbt:
     name: Set up and Run DBT
     needs: [check-cache, manifest]
-    if: ${{ always() }} # Ensures it always runs, even if other jobs are skipped
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -101,8 +101,8 @@ jobs:
           key: manifest-${{ github.event.pull_request.number }}
           restore-keys: |
             manifest-
-            
-      - name: Debug: Print the first line of manifest.json
+
+      - name: Debug Print the first line of manifest.json
         if: ${{ inputs.with-initial-manifest == true }}
         run: |
           if [ -f "${{ inputs.project-folder }}/target/manifest.json" ]; then
