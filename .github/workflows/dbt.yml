@@ -5,7 +5,9 @@ on:
     inputs:
       commands:
         required: true
-        description: The commands that should run. E.g., `dbt deps`, `dbt run --target github`, `dbt build --target github`.
+        description: |
+          The commands that should run. 
+          E.g., `dbt deps`, `dbt run --target github`, `dbt build --target github`.
         type: string
       project-folder:
         required: false
@@ -31,7 +33,7 @@ on:
 
           This is useful for pull requests when you want to limit `dbt run` and `dbt test` to only the files that have changed.
 
-          E.g. `run --select +state:modified --state ./` and `test --select +state:modified --state ./`.
+          E.g., `run --select +state:modified --state ./` and `test --select +state:modified --state ./`.
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE:
         required: true
@@ -41,18 +43,39 @@ on:
         description: The Snowflake private key.
 
 jobs:
-  manifest:
-    name: Manifest
+  check-cache:
+    name: Check Cache
     if: ${{ inputs.with-initial-manifest == true }}
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.check-cache.outputs.cache-hit }}
+
+    steps:
+      - name: Check cache for manifest.json
+        id: check-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ inputs.project-folder }}/target/manifest.json
+          key: manifest-${{ github.event.pull_request.number }}
+          restore-keys: |
+            manifest-
+
+  manifest:
+    name: Save Initial Manifest
+    needs: check-cache
+    if: ${{ inputs.with-initial-manifest == true && needs.check-cache.outputs.cache-hit != 'true' }}
     uses: ./.github/workflows/dbt-save-manifest.yml
+    with:
+      project-folder: ${{ inputs.project-folder }}
+      database: ${{ inputs.database }}
+      schema: ${{ inputs.schema }}
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
 
   dbt:
-    name: Set up and run DBT
-    needs: [manifest]
-    if: ${{ always() }}
+    name: Set up and Run DBT
+    needs: [check-cache, manifest]
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -67,27 +90,18 @@ jobs:
           dependencies: "dbt-core dbt-snowflake"
 
       - name: Copy profiles.yml
-        run: |
-          sudo cp -r .dbt/ /home/runner/
-
-  #   - name: Download manifest.json
-  #     if: ${{ inputs.with-initial-manifest == true }}
-  #     uses: actions/download-artifact@v4
-  #     with:
-  #       name: manifest-${{ github.event.pull_request.number }}
-  #       path: ${{ inputs.project-folder }}/target/manifest.json
+        run: sudo cp -r .dbt/ /home/runner/
 
       - name: Restore manifest from cache
         if: ${{ inputs.with-initial-manifest == true }}
         uses: actions/cache@v4
         with:
-          path: ${{ inputs.project-folder }}/manifest.json
+          path: ${{ inputs.project-folder }}/target/manifest.json
           key: manifest-${{ github.event.pull_request.number }}
           restore-keys: |
             manifest-
-        
 
-      - name: Execute provided script
+      - name: Execute Provided Commands
         env:
           DATABASE: ${{ inputs.database }}
           SCHEMA: ${{ inputs.schema }}

@@ -30,6 +30,7 @@ jobs:
   manifest:
     name: Handle DBT manifest
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,29 +38,18 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           fetch-depth: 1
 
-      - name: Check manifest cache
-        id: check-cache
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ inputs.project-folder }}/target/manifest.json
-          key: manifest-${{ github.event.pull_request.number }}
-
       - name: Set up Python
-        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: ./.github/actions/setup-python
 
       - name: Install dbt dependencies
-        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: ./.github/actions/install-python-dependencies
         with:
           dependencies: "dbt-core dbt-snowflake"
 
       - name: Setup dbt profile
-        if: steps.check-cache.outputs.cache-hit != 'true'
         run: sudo cp -r .dbt/ /home/runner/
 
       - name: Generate manifest
-        if: steps.check-cache.outputs.cache-hit != 'true'
         env:
           DATABASE: ${{ inputs.database }}
           SCHEMA: ${{ inputs.schema }}
@@ -71,25 +61,8 @@ jobs:
           dbt deps
           dbt compile --target github
 
-  #   - name: Upload manifest artifact
-  #     if: steps.check-cache.outputs.cache-hit != 'true'
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: manifest-${{ github.event.pull_request.number }}
-  #       path: ${{ inputs.project-folder }}/target/manifest.json
-  #       retention-days: 90
       - name: Save manifest to cache
-        if: steps.check-cache.outputs.cache-hit != 'true'
         uses: actions/cache@v4
         with:
           path: ${{ inputs.project-folder }}/target/manifest.json
           key: manifest-${{ github.event.pull_request.number }}
-
-
-
-   #   - name: Cache manifest
-   #     if: steps.check-cache.outputs.cache-hit != 'true'
-   #     uses: actions/cache/save@v4
-   #     with:
-   #       path: ${{ inputs.project-folder }}/target/manifest.json
-   #       key: dbt-manifest-${{ github.event.pull_request.number }}
