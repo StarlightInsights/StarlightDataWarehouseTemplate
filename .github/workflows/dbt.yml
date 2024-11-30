@@ -102,12 +102,17 @@ jobs:
           restore-keys: |
             manifest-
 
+      - name: Move manifest to project folder
+        if: ${{ inputs.with-initial-manifest == true }}
+        run: |
+          mv ${{ inputs.project-folder }}/target/manifest.json ${{ inputs.project-folder }}/manifest.json
+
       - name: Debug Print the first line of manifest.json
         if: ${{ inputs.with-initial-manifest == true }}
         run: |
-          if [ -f "${{ inputs.project-folder }}/target/manifest.json" ]; then
+          if [ -f "${{ inputs.project-folder }}/manifest.json" ]; then
             echo "Manifest.json exists. First line:"
-            head -n 1 "${{ inputs.project-folder }}/target/manifest.json"
+            head -n 1 "${{ inputs.project-folder }}/manifest.json"
           else
             echo "Manifest.json does not exist."
           fi
