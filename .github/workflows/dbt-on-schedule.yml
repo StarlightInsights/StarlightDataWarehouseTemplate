@@ -1,7 +1,9 @@
-name: DBT Manual Run
+name: DBT on PR close
 
 on:
   workflow_dispatch:
+#  schedule:
+#    - cron: '0 0 * * *'
 
 concurrency: production
 
@@ -15,5 +17,4 @@ jobs:
     with:
       commands: |
         dbt deps
-        dbt debug --target github
         dbt build --target github
