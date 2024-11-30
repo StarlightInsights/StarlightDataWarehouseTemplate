@@ -1,4 +1,4 @@
-name: dbt-save-manifest.yml
+name: DBT save initial manifest
 
 on:
   workflow_call:
