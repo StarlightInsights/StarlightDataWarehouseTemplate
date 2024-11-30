@@ -19,7 +19,6 @@ jobs:
       with-initial-manifest: true
       schema: "pr_${{ github.event.pull_request.number }}"
       commands: |
-        dbt debug --target github
         dbt deps
         dbt seed --target github
         dbt run --target github
