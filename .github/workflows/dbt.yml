@@ -97,7 +97,7 @@ jobs:
         if: ${{ inputs.with-initial-manifest == true }}
         uses: actions/cache@v4
         with:
-          path: ${{ inputs.project-folder }}/target/manifest.json
+          path: ${{ inputs.project-folder }}/manifest.json
           key: manifest-${{ github.event.pull_request.number }}
           restore-keys: |
             manifest-
@@ -105,9 +105,9 @@ jobs:
       - name: Debug Print the first line of manifest.json
         if: ${{ inputs.with-initial-manifest == true }}
         run: |
-          if [ -f "${{ inputs.project-folder }}/target/manifest.json" ]; then
+          if [ -f "${{ inputs.project-folder }}/manifest.json" ]; then
             echo "Manifest.json exists. First line:"
-            head -n 1 "${{ inputs.project-folder }}/target/manifest.json"
+            head -n 1 "${{ inputs.project-folder }}/manifest.json"
           else
             echo "Manifest.json does not exist."
           fi
