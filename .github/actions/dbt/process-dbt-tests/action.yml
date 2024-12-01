@@ -25,23 +25,37 @@ runs:
           exit 0
         fi
 
-        echo "🔴 Found $num_failed_tests failed tests"
-        echo "----------------------------------------"
+        echo "❌ Found $num_failed_tests failed DBT test(s)"
+        echo ""
 
         while IFS= read -r line; do
           if [[ $line == *"compiled code at"* ]]; then
             # Extract SQL file path exactly as it appears in the log
             sql_path=$(echo "$line" | awk '{print $5}')
             test_name=$(basename "$sql_path" .sql)
-
-            echo "📄 SQL for failed test: $test_name"
-            echo "Failed test SQL:"
+            
+            # Get the failure message
+            failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1)
+            
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "🔍 Test Name: $test_name"
+            echo "❗ Error: ${failure_msg#*Failure in test }"
+            echo ""
+            echo "📋 Generated SQL Query:"
+            echo "──────────────────────"
             if [ -f "$sql_path" ]; then
-              # Read file and remove empty lines and lines with only whitespace
-              grep -v '^[[:space:]]*$' "$sql_path"
+              # Format and output SQL with proper indentation
+              grep -v '^[[:space:]]*$' "$sql_path" | sed 's/^/    /'
             else
-              echo "SQL file not found at: $sql_path"
+              echo "    SQL file not found at: $sql_path"
             fi
-            echo "----------------------------------------"
+            echo ""
           fi
         done < "dbt_output.log"
+
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "💡 To fix these issues:"
+        echo "  1. Review each failed test's SQL query"
+        echo "  2. Check the data for violations of the test conditions"
+        echo "  3. Either fix the data or adjust the test constraints as needed"
+        echo ""
