@@ -129,6 +129,19 @@ jobs:
           ${{ inputs.commands }} 2>&1 | tee dbt_output.log
           exit ${PIPESTATUS[0]}
 
+      - name: Debug Log Content
+        if: failure()
+        working-directory: ${{ inputs.project-folder }}
+        run: |
+          echo "=== DBT Output Log Content ==="
+          if [ -f "dbt_output.log" ]; then
+            cat dbt_output.log
+          else
+            echo "Log file not found at: $(pwd)/dbt_output.log"
+            ls -la
+          fi
+          echo "=== End of Log Content ==="
+
       - name: Process Test Results
         if: failure()
         uses: ./.github/actions/dbt/process-dbt-tests
