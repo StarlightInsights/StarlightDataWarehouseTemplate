@@ -134,4 +134,11 @@ jobs:
 
       - name: DBT Docs to GitHub Pages
         if: ${{ inputs.with-dbt-docs == true }}
-        run: echo dbt pages
+        env:
+          DATABASE: ${{ inputs.database }}
+          SCHEMA: ${{ inputs.schema }}
+          SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
+          SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        working-directory: ${{ inputs.project-folder }}
+        run: dbt docs generate
