@@ -37,7 +37,8 @@ runs:
             echo "📄 SQL for failed test: $test_name"
             echo "Failed test SQL:"
             if [ -f "$sql_path" ]; then
-              cat "$sql_path"
+              # Read file and remove empty lines and lines with only whitespace
+              grep -v '^[[:space:]]*$' "$sql_path"
             else
               echo "SQL file not found at: $sql_path"
             fi
