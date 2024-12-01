@@ -29,7 +29,12 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-          git diff --diff-filter=d --name-only origin/main | grep '\.sql$' || echo "No SQL files changed" && exit 0 | xargs -r sqlfluff lint
+          CHANGED_FILES=$(git diff --diff-filter=d --name-only origin/main | grep '\.sql$' || true)
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "$CHANGED_FILES" | xargs sqlfluff lint
+          else
+            echo "No SQL files changed"
+          fi
 
       - name: Lint all SQL files on Schedule
         if: github.event_name == 'schedule'

@@ -1,0 +1,63 @@
+name: 'Get SQL from failing DBT Tests'
+
+inputs:
+  project-folder:
+    description: 'Path to the DBT project folder'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      working-directory: ${{ inputs.project-folder }}
+      run: |
+        bold='\033[1m'
+        reset='\033[0m'
+
+        if [ ! -f "dbt_output.log" ]; then
+          echo "No test output file found"
+          exit 0
+        fi
+
+        num_failed_tests=$(grep "Done." "dbt_output.log" | grep -o "ERROR=[0-9]*" | cut -d'=' -f2)
+
+        if [ -z "$num_failed_tests" ] || [ "$num_failed_tests" -eq 0 ]; then
+          echo "No failed tests found"
+          exit 0
+        fi
+
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        if [ "$num_failed_tests" -eq 1 ]; then
+          echo -e "${bold}❌ Found 1 failed DBT test${reset}"
+        else
+          echo -e "${bold}❌ Found $num_failed_tests failed DBT tests${reset}"
+        fi
+        echo ""
+
+        while IFS= read -r line; do
+          if [[ $line == *"compiled code at"* ]]; then
+
+            sql_path=$(echo "$line" | awk '{print $5}')
+            test_name=$(basename "$sql_path" .sql)
+
+            failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | cut -c13- | sed 's/^[[:space:]]*//')
+
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            echo -e "${bold}🔍 Name${reset}: $test_name"
+            echo -e "${bold}❗ Error${reset}: $failure_msg"
+            echo ""
+            echo -e "${bold}🦖 Generated SQL Query${reset}:"
+            echo "──────────────────────"
+            echo ""
+            if [ -f "$sql_path" ]; then
+              grep -v '^[[:space:]]*$' "$sql_path" | sed 's/^/    /'
+            else
+              echo "    SQL file not found at: $sql_path"
+            fi
+            echo ""
+          fi
+        done < "dbt_output.log"
+
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
