@@ -160,6 +160,5 @@ jobs:
     if: ${{ always() && inputs.with-dbt-docs == true }}
     steps:
       - name: Deploy DBT Docs to GitHub Pages
-        if: ${{ inputs.with-dbt-docs == true }}
         id: deployment
         uses: actions/deploy-pages@v4
