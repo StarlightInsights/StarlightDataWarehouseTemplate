@@ -29,7 +29,7 @@ runs:
           exit 0
         fi
 
-        echo "❌ Found $num_failed_tests failed DBT test(s)"
+        echo -e "${bold}❌ Found $num_failed_tests failed DBT test(s)${reset}"
         echo ""
 
         while IFS= read -r line; do
@@ -39,7 +39,7 @@ runs:
             test_name=$(basename "$sql_path" .sql)
 
             # Get the failure message and trim first 12 characters
-            failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | cut -c13-)
+            failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | cut -c13- | sed 's/^[[:space:]]*//')
 
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo -e "🔍 ${bold}Name${reset}: $test_name"
