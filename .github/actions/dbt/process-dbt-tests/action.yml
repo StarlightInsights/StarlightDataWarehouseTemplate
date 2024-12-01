@@ -12,8 +12,9 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
-        # ANSI escape codes for bold and reset
+        # ANSI escape codes for bold, gray, and reset
         bold='\033[1m'
+        gray='\033[90m'
         reset='\033[0m'
 
         if [ ! -f "dbt_output.log" ]; then
@@ -29,7 +30,11 @@ runs:
           exit 0
         fi
 
-        echo -e "${bold}❌ Found $num_failed_tests failed DBT test(s)${reset}"
+        if [ "$num_failed_tests" -eq 1 ]; then
+          echo -e "${bold}❌ Found 1 failed DBT test${reset}"
+        else
+          echo -e "${bold}❌ Found $num_failed_tests failed DBT tests${reset}"
+        fi
         echo ""
 
         while IFS= read -r line; do
@@ -48,8 +53,10 @@ runs:
             echo -e "🦖 ${bold}Generated SQL Query${reset}:"
             echo "──────────────────────"
             if [ -f "$sql_path" ]; then
-              # Format and output SQL with proper indentation
+              # Format and output SQL with proper indentation in gray
+              echo -e "${gray}"
               grep -v '^[[:space:]]*$' "$sql_path" | sed 's/^/    /'
+              echo -en "${reset}"
             else
               echo "    SQL file not found at: $sql_path"
             fi
