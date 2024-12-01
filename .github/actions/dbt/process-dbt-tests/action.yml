@@ -12,6 +12,23 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
+        echo "Current directory: $(pwd)"
+        
+        echo "Looking for these files:"
+        echo "1. $(pwd)/target/compiled/starlight/models/example/schema.yml/unique_my_second_dbt_model_id.sql"
+        echo "2. $(pwd)/target/compiled/starlight/models/example/schema.yml/unique_some_model_number.sql"
+        
+        echo -e "\nVerifying path components:"
+        echo "Target dir exists: $(test -d "target" && echo "YES" || echo "NO")"
+        echo "Compiled dir exists: $(test -d "target/compiled" && echo "YES" || echo "NO")"
+        echo "Starlight dir exists: $(test -d "target/compiled/starlight" && echo "YES" || echo "NO")"
+        echo "Models dir exists: $(test -d "target/compiled/starlight/models" && echo "YES" || echo "NO")"
+        echo "Example dir exists: $(test -d "target/compiled/starlight/models/example" && echo "YES" || echo "NO")"
+        echo "Schema.yml dir exists: $(test -d "target/compiled/starlight/models/example/schema.yml" && echo "YES" || echo "NO")"
+        
+        echo -e "\nListing all SQL files in target:"
+        find target -name "*.sql"
+
         if [ ! -f "dbt_output.log" ]; then
           echo "No test output file found"
           exit 0
@@ -33,21 +50,27 @@ runs:
             # Extract SQL file path
             sql_file=$(echo "$line" | awk '{print $5}')
             test_name=$(basename "$sql_file" .sql)
-
+            echo "Found test failure for: $test_name"
+            echo "Looking for SQL file at: $sql_file"
+            
             echo "📄 SQL for failed test: $test_name"
-            echo "```sql"
             if [ -f "$sql_file" ]; then
+              echo "```sql"
               cat "$sql_file"
+              echo "```"
             else
-              echo "SQL file not found at: $sql_file"
-              # Try to find it in the local directory
-              local_file=$(find . -name "$(basename "$sql_file")")
-              if [ -n "$local_file" ]; then
-                echo "Found file at: $local_file"
-                cat "$local_file"
+              echo "File not found at expected location: $sql_file"
+              echo "Searching for file..."
+              found_file=$(find target -name "$(basename "$sql_file")")
+              if [ -n "$found_file" ]; then
+                echo "Found at: $found_file"
+                echo "```sql"
+                cat "$found_file"
+                echo "```"
+              else
+                echo "Could not find SQL file anywhere in target directory"
               fi
             fi
-            echo "```"
             echo "----------------------------------------"
           fi
         done < "dbt_output.log"
