@@ -12,6 +12,7 @@ runs:
       working-directory: ${{ inputs.project-folder }}
       run: |
         bold='\033[1m'
+        dim='\033[2m'
         reset='\033[0m'
 
         if [ ! -f "dbt_output.log" ]; then
@@ -52,7 +53,9 @@ runs:
             echo "──────────────────────"
             echo ""
             if [ -f "$sql_path" ]; then
+              echo -e "${dim}"
               grep -v '^[[:space:]]*$' "$sql_path" | sed 's/^/    /'
+              echo -e "${reset}"
             else
               echo "    SQL file not found at: $sql_path"
             fi
