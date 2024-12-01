@@ -12,7 +12,39 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
-        echo "Content of unique_some_model_number.sql:"
+        if [ ! -f "dbt_output.log" ]; then
+          echo "No test output file found"
+          exit 0
+        fi
+
+        # Get number of errors from the "Done." line
+        num_failed_tests=$(grep "Done." "dbt_output.log" | grep -o "ERROR=[0-9]*" | cut -d'=' -f2)
+
+        if [ -z "$num_failed_tests" ] || [ "$num_failed_tests" -eq 0 ]; then
+          echo "No failed tests found"
+          exit 0
+        fi
+
+        echo "🔴 Found $num_failed_tests failed tests"
         echo "----------------------------------------"
-        cat target/run/starlight/models/example/schema.yml/unique_some_model_number.sql
-        echo "----------------------------------------"
+
+        while IFS= read -r line; do
+          if [[ $line == *"compiled code at"* ]]; then
+            # Extract SQL file path
+            sql_path=$(echo "$line" | awk '{print $5}')
+            test_name=$(basename "$sql_path" .sql)
+            
+            # Convert path from compiled to run
+            run_path=${sql_path/compiled/run}
+            
+            echo "📄 SQL for failed test: $test_name"
+            echo "```sql"
+            if [ -f "$run_path" ]; then
+              cat "$run_path"
+            else
+              echo "SQL file not found at: $run_path"
+            fi
+            echo "```"
+            echo "----------------------------------------"
+          fi
+        done < "dbt_output.log"
