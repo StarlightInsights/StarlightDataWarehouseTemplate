@@ -44,16 +44,16 @@ runs:
 
             failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | cut -c13- | sed 's/^[[:space:]]*//')
 
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo ""
-            echo -e "🔍 ${bold}Name${reset}: $test_name"
-            echo -e "❗ ${bold}Error${reset}: $failure_msg"
+            echo -e "${bold}🔍 Name${reset}: $test_name"
+            echo -e "${bold}❗ Error${reset}: $failure_msg"
             echo ""
-            echo -e "🦖 ${bold}Generated SQL Query${reset}:"
+            echo -e "${bold}🦖 Generated SQL Query${reset}:"
             echo "──────────────────────"
             echo ""
             if [ -f "$sql_path" ]; then
-              echo -e "${dim}"
+              echo -e "${bold}"
               grep -v '^[[:space:]]*$' "$sql_path" | sed 's/^/    /'
               echo -e "${reset}"
             else
