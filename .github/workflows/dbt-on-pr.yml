@@ -3,8 +3,8 @@ name: DBT on PR
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'starlight/**'
+#    paths:
+#      - 'starlight/**'
 
 concurrency: pr-${{ github.event.pull_request.number }}
 
