@@ -12,9 +12,26 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
-        echo "Current directory: $(pwd)"
-        echo "Directory contents:"
-        ls -R target/compiled
+        echo "=== Current Directory ==="
+        pwd
+
+        echo -e "\n=== Listing root project directory ==="
+        ls -la /home/runner/work/StarlightDataWarehouseTemplate/StarlightDataWarehouseTemplate/
+
+        echo -e "\n=== Listing parent directory ==="
+        ls -la /home/runner/work/StarlightDataWarehouseTemplate/
+
+        echo -e "\n=== Listing current directory ==="
+        ls -la ./
+
+        echo -e "\n=== Listing target directory ==="
+        ls -la target/
+
+        echo -e "\n=== Listing target/compiled directory ==="
+        ls -la target/compiled/
+
+        echo -e "\n=== Finding all .sql files ==="
+        find . -name "*.sql"
 
         if [ ! -f "dbt_output.log" ]; then
           echo "No test output file found"
@@ -29,7 +46,7 @@ runs:
           exit 0
         fi
 
-        echo "🔴 Found $num_failed_tests failed tests"
+        echo -e "\n🔴 Found $num_failed_tests failed tests"
         echo "----------------------------------------"
 
         while IFS= read -r line; do
@@ -45,8 +62,13 @@ runs:
             if [ -f "$sql_file" ]; then
               cat "$sql_file"
             else
-              echo "SQL file not found. Contents of target/compiled directory:"
-              find target/compiled -type f -name "*.sql"
+              echo "SQL file not found. Directory contents where it should be:"
+              dirname_path=$(dirname "$sql_file")
+              if [ -d "$dirname_path" ]; then
+                ls -la "$dirname_path"
+              else
+                echo "Directory $dirname_path does not exist"
+              fi
             fi
             echo "```"
             echo "----------------------------------------"
