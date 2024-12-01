@@ -1,10 +1,12 @@
 name: dbt.yml
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 on:
   workflow_call:
-    permissions:
-      pages: write
-      id-token: write
     inputs:
       commands:
         required: true
