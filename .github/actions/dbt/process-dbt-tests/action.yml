@@ -12,6 +12,10 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
+        # ANSI escape codes for bold and reset
+        bold='\033[1m'
+        reset='\033[0m'
+
         if [ ! -f "dbt_output.log" ]; then
           echo "No test output file found"
           exit 0
@@ -34,14 +38,14 @@ runs:
             sql_path=$(echo "$line" | awk '{print $5}')
             test_name=$(basename "$sql_path" .sql)
 
-            # Get the failure message and remove timestamp
-            failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | cut -c 13-)
+            # Get the failure message and trim first 12 characters
+            failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | cut -c13-)
 
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            echo "🔍 **Name**: $test_name"
-            echo "❗ **Error**: ${failure_msg#*Failure in test }"
+            echo -e "🔍 ${bold}Name${reset}: $test_name"
+            echo -e "❗ ${bold}Error${reset}: $failure_msg"
             echo ""
-            echo "🦖 **Generated SQL Query**:"
+            echo -e "🦖 ${bold}Generated SQL Query${reset}:"
             echo "──────────────────────"
             if [ -f "$sql_path" ]; then
               # Format and output SQL with proper indentation
