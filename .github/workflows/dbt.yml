@@ -126,8 +126,10 @@ jobs:
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         working-directory: ${{ inputs.project-folder }}
         run: |
-          ${{ inputs.commands }} 2>&1 | tee dbt_output.log
-          exit ${PIPESTATUS[0]}
+          {
+            ${{ inputs.commands }}
+          } 2>&1 | tee dbt_output.log
+          test ${PIPESTATUS[0]} -eq 0
 
       - name: Debug Log Content
         if: failure()
