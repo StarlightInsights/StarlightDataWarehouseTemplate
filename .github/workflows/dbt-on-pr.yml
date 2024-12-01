@@ -6,6 +6,11 @@ on:
     paths:
       - 'starlight/**'
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 concurrency: pr-${{ github.event.pull_request.number }}
 
 jobs:
@@ -15,6 +20,10 @@ jobs:
     secrets:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     with:
       with-initial-manifest: true
       with-dbt-docs: true

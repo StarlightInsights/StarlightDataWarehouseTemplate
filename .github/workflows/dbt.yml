@@ -47,11 +47,6 @@ on:
         required: true
         description: The Snowflake private key.
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   check-cache:
     name: Check Cache
