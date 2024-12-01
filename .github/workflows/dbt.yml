@@ -131,7 +131,6 @@ jobs:
 
       - name: Process Test Results
         if: failure()
-        working-directory: ${{ inputs.project-folder }}
         uses: ./.github/actions/process-dbt-tests
         with:
-          log-file: dbt_output.log
+          log-file: ${{ inputs.project-folder }}/dbt_output.log
