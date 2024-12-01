@@ -24,6 +24,11 @@ on:
         description: The production schema.
         default: datawarehouse
         type: string
+      with-dbt-docs:
+        required: false
+        default: false
+        type: boolean
+        description: Will create DBT docs and upload to GitHub Pages.
       with-initial-manifest:
         required: false
         default: false
@@ -107,16 +112,6 @@ jobs:
         run: |
           mv ${{ inputs.project-folder }}/target/manifest.json ${{ inputs.project-folder }}/manifest.json
 
-      - name: Debug Print the first line of manifest.json
-        if: ${{ inputs.with-initial-manifest == true }}
-        run: |
-          if [ -f "${{ inputs.project-folder }}/manifest.json" ]; then
-            echo "Manifest.json exists. First line:"
-            head -n 1 "${{ inputs.project-folder }}/manifest.json"
-          else
-            echo "Manifest.json does not exist."
-          fi
-
       - name: Execute Provided Commands
         env:
           DATABASE: ${{ inputs.database }}
@@ -136,3 +131,7 @@ jobs:
         uses: ./.github/actions/dbt/process-dbt-tests
         with:
           project-folder: ${{ inputs.project-folder }}
+
+      - name: DBT Docs to GitHub Pages
+        if: ${{ inputs.with-dbt-docs == true }}
+        run: echo dbt pages
