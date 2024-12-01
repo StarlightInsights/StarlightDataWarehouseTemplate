@@ -149,7 +149,7 @@ jobs:
         run: dbt docs generate --target github
 
       - name: DBT Docs Upload
-        id: dbt-docs
+        id: deployment
         if: ${{ inputs.with-dbt-docs == true }}
         uses: actions/upload-pages-artifact@v3
         with:
@@ -162,11 +162,11 @@ jobs:
       contents: read
     environment:
       name: github-pages
-      url: ${{ steps.dbt-docs.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: dbt
     # if: ${{ inputs.with-dbt-docs == true }}
     steps:
       - name: Deploy DBT Docs to GitHub Pages
-        id: dbt-docs
+        id: deployment
         uses: actions/deploy-pages@v4
