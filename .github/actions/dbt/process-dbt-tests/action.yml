@@ -1,0 +1,49 @@
+name: 'Process DBT Test Results'
+description: 'Processes and formats DBT test results from output log'
+
+inputs:
+  log-file:
+    description: 'Path to the DBT output log file'
+    required: true
+    default: 'dbt_output.log'
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        if [ ! -f "${{ inputs.log-file }}" ]; then
+          echo "No test output file found"
+          exit 0
+        fi
+
+        num_failed_tests=$(grep -o "ERROR=[0-9]*" "${{ inputs.log-file }}" | awk -F= '{print $2}')
+        
+        if [ -z "$num_failed_tests" ] || [ "$num_failed_tests" -eq 0 ]; then
+          echo "No failed tests found"
+          exit 0
+        fi
+        
+        echo "🔴 Found $num_failed_tests failed tests"
+        echo "----------------------------------------"
+        
+        for i in $(seq 1 "$num_failed_tests"); do
+          header=$(grep -m "$i" "Failure in test" "${{ inputs.log-file }}" | tail -n 1 | cut -c 15-)
+          description=$(grep -A 1 -m "$i" "Failure in test" "${{ inputs.log-file }}" | tail -n 1 | cut -c 15-)
+          code_path=$(grep -m "$i" "compiled Code at" "${{ inputs.log-file }}" | tail -n 1 | awk '{print $5}')
+          
+          echo "❌ Failed Test #$i:"
+          echo "📌 $header"
+          echo "ℹ️ $description"
+          
+          if [ -f "$code_path" ]; then
+            echo "📄 Generated SQL:"
+            echo "```sql"
+            grep -vE '^$' "$code_path"
+            echo "```"
+          else
+            echo "⚠️ Code file not found: $code_path"
+          fi
+          
+          echo "----------------------------------------"
+        done

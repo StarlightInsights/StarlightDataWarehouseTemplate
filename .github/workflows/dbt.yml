@@ -126,4 +126,11 @@ jobs:
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         working-directory: ${{ inputs.project-folder }}
         run: |
-          ${{ inputs.commands }}
+          ${{ inputs.commands }} 2>&1 | tee dbt_output.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Process Test Results
+        if: failure()
+        uses: ./.github/actions/dbt/process-dbt-tests
+        with:
+          log-file: ${{ inputs.project-folder }}/dbt_output.log
