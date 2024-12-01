@@ -12,27 +12,6 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
-        echo "=== Current Directory ==="
-        pwd
-
-        echo -e "\n=== Listing root project directory ==="
-        ls -la /home/runner/work/StarlightDataWarehouseTemplate/StarlightDataWarehouseTemplate/
-
-        echo -e "\n=== Listing parent directory ==="
-        ls -la /home/runner/work/StarlightDataWarehouseTemplate/
-
-        echo -e "\n=== Listing current directory ==="
-        ls -la ./
-
-        echo -e "\n=== Listing target directory ==="
-        ls -la target/
-
-        echo -e "\n=== Listing target/compiled directory ==="
-        ls -la target/compiled/
-
-        echo -e "\n=== Finding all .sql files ==="
-        find . -name "*.sql"
-
         if [ ! -f "dbt_output.log" ]; then
           echo "No test output file found"
           exit 0
@@ -46,28 +25,26 @@ runs:
           exit 0
         fi
 
-        echo -e "\n🔴 Found $num_failed_tests failed tests"
+        echo "🔴 Found $num_failed_tests failed tests"
         echo "----------------------------------------"
 
         while IFS= read -r line; do
           if [[ $line == *"compiled code at"* ]]; then
-            sql_file=$(echo "$line" | awk '{print $NF}')
+            # Extract SQL file path
+            sql_file=$(echo "$line" | awk '{print $5}')
             test_name=$(basename "$sql_file" .sql)
-
-            echo "Looking for SQL file: $sql_file"
-            echo "Complete path: $(pwd)/$sql_file"
 
             echo "📄 SQL for failed test: $test_name"
             echo "```sql"
             if [ -f "$sql_file" ]; then
               cat "$sql_file"
             else
-              echo "SQL file not found. Directory contents where it should be:"
-              dirname_path=$(dirname "$sql_file")
-              if [ -d "$dirname_path" ]; then
-                ls -la "$dirname_path"
-              else
-                echo "Directory $dirname_path does not exist"
+              echo "SQL file not found at: $sql_file"
+              # Try to find it in the local directory
+              local_file=$(find . -name "$(basename "$sql_file")")
+              if [ -n "$local_file" ]; then
+                echo "Found file at: $local_file"
+                cat "$local_file"
               fi
             fi
             echo "```"
