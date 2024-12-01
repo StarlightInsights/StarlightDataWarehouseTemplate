@@ -132,7 +132,7 @@ jobs:
         with:
           project-folder: ${{ inputs.project-folder }}
 
-      - name: DBT Docs to GitHub Pages
+      - name: DBT Docs Generate
         if: ${{ inputs.with-dbt-docs == true }}
         env:
           DATABASE: ${{ inputs.database }}
@@ -142,3 +142,22 @@ jobs:
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         working-directory: ${{ inputs.project-folder }}
         run: dbt docs generate --target github
+
+      - name: DBT Docs Upload
+        id: dbt-docs
+        if: ${{ inputs.with-dbt-docs == true }}
+        uses: actions/upload-pages-artifact@v3 
+        with:
+          path: ${{ inputs.project-folder }}/target
+
+      deploy-dbt-docs:
+        environment:
+          name: github-pages
+          url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        needs: build
+        if: ${{ inputs.with-dbt-docs == true }}
+        steps:
+          - name: Deploy DBT Docs to GitHub Pages
+            id: dbt-docs
+            uses: actions/deploy-pages@v4
