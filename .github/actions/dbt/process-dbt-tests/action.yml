@@ -12,6 +12,10 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
+        echo "Current directory: $(pwd)"
+        echo "Directory contents:"
+        ls -R target/compiled
+
         if [ ! -f "dbt_output.log" ]; then
           echo "No test output file found"
           exit 0
@@ -33,12 +37,16 @@ runs:
             sql_file=$(echo "$line" | awk '{print $NF}')
             test_name=$(basename "$sql_file" .sql)
 
-            echo "SQL for failed test: $test_name"
+            echo "Looking for SQL file: $sql_file"
+            echo "Complete path: $(pwd)/$sql_file"
+
+            echo "📄 SQL for failed test: $test_name"
             echo "```sql"
             if [ -f "$sql_file" ]; then
               cat "$sql_file"
             else
-              echo "SQL file not found: $sql_file"
+              echo "SQL file not found. Contents of target/compiled directory:"
+              find target/compiled -type f -name "*.sql"
             fi
             echo "```"
             echo "----------------------------------------"
