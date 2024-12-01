@@ -6,6 +6,11 @@ on:
     paths:
       - 'starlight/**'
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 concurrency: pr-${{ github.event.pull_request.number }}
 
 jobs:
