@@ -12,11 +12,35 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
-        echo "=== DBT Output Log Content ==="
-        if [ -f "dbt_output.log" ]; then
-          cat dbt_output.log
-        else
-          echo "Log file not found at: $(pwd)/dbt_output.log"
-          ls -la
+        if [ ! -f "dbt_output.log" ]; then
+          echo "No test output file found"
+          exit 0
         fi
-        echo "=== End of Log Content ==="
+
+        # Get number of errors from the "Done." line
+        num_failed_tests=$(grep "Done." "dbt_output.log" | grep -o "ERROR=[0-9]*" | cut -d'=' -f2)
+
+        if [ -z "$num_failed_tests" ] || [ "$num_failed_tests" -eq 0 ]; then
+          echo "No failed tests found"
+          exit 0
+        fi
+
+        echo "🔴 Found $num_failed_tests failed tests"
+        echo "----------------------------------------"
+
+        while IFS= read -r line; do
+          if [[ $line == *"compiled code at"* ]]; then
+            sql_file=$(echo "$line" | awk '{print $NF}')
+            test_name=$(basename "$sql_file" .sql)
+
+            echo "SQL for failed test: $test_name"
+            echo "```sql"
+            if [ -f "$sql_file" ]; then
+              cat "$sql_file"
+            else
+              echo "SQL file not found: $sql_file"
+            fi
+            echo "```"
+            echo "----------------------------------------"
+          fi
+        done < "dbt_output.log"
