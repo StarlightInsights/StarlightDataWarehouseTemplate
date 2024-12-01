@@ -2,22 +2,23 @@ name: 'Process DBT Test Results'
 description: 'Processes and formats DBT test results from output log'
 
 inputs:
-  log-file:
-    description: 'Path to the DBT output log file'
+  project-folder:
+    description: 'Path to the DBT project folder'
     required: true
 
 runs:
   using: "composite"
   steps:
     - shell: bash
+      working-directory: ${{ inputs.project-folder }}
       run: |
-        if [ ! -f "${{ inputs.log-file }}" ]; then
+        if [ ! -f "dbt_output.log" ]; then
           echo "No test output file found"
           exit 0
         fi
 
         # Get number of errors from the "Done." line
-        num_failed_tests=$(grep "Done." "${{ inputs.log-file }}" | grep -o "ERROR=[0-9]*" | cut -d'=' -f2)
+        num_failed_tests=$(grep "Done." "dbt_output.log" | grep -o "ERROR=[0-9]*" | cut -d'=' -f2)
 
         if [ -z "$num_failed_tests" ] || [ "$num_failed_tests" -eq 0 ]; then
           echo "No failed tests found"
@@ -42,4 +43,4 @@ runs:
             echo "```"
             echo "----------------------------------------"
           fi
-        done < "${{ inputs.log-file }}"
+        done < "dbt_output.log"

@@ -148,4 +148,4 @@ jobs:
         if: failure()
         uses: ./.github/actions/dbt/process-dbt-tests
         with:
-          log-file: ${{ inputs.project-folder }}/dbt_output.log
+          project-folder: ${{ inputs.project-folder }}
