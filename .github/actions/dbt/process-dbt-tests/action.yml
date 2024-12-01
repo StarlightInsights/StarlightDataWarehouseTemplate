@@ -12,9 +12,8 @@ runs:
     - shell: bash
       working-directory: ${{ inputs.project-folder }}
       run: |
-        # ANSI escape codes for bold and reset
+        # ANSI escape code for bold
         bold='\033[1m'
-        dim='\033[2m'    # Using dim instead of gray
         reset='\033[0m'
 
         if [ ! -f "dbt_output.log" ]; then
@@ -22,7 +21,6 @@ runs:
           exit 0
         fi
 
-        # Get number of errors from the "Done." line
         num_failed_tests=$(grep "Done." "dbt_output.log" | grep -o "ERROR=[0-9]*" | cut -d'=' -f2)
 
         if [ -z "$num_failed_tests" ] || [ "$num_failed_tests" -eq 0 ]; then
@@ -30,6 +28,8 @@ runs:
           exit 0
         fi
 
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
         if [ "$num_failed_tests" -eq 1 ]; then
           echo -e "${bold}❌ Found 1 failed DBT test${reset}"
         else
@@ -39,11 +39,10 @@ runs:
 
         while IFS= read -r line; do
           if [[ $line == *"compiled code at"* ]]; then
-            # Extract SQL file path exactly as it appears in the log
+
             sql_path=$(echo "$line" | awk '{print $5}')
             test_name=$(basename "$sql_path" .sql)
 
-            # Get the failure message and trim first 12 characters
             failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | cut -c13- | sed 's/^[[:space:]]*//')
 
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -52,11 +51,9 @@ runs:
             echo ""
             echo -e "🦖 ${bold}Generated SQL Query${reset}:"
             echo "──────────────────────"
+            echo ""
             if [ -f "$sql_path" ]; then
-              # Format and output SQL with dimmed text
-              echo -en "${dim}"
               grep -v '^[[:space:]]*$' "$sql_path" | sed 's/^/    /'
-              echo -en "${reset}"
             else
               echo "    SQL file not found at: $sql_path"
             fi
