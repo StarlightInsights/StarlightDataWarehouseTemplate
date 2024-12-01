@@ -1,4 +1,4 @@
-name: 'Get SQL from failings DBT Tests'
+name: 'Get SQL from failing DBT Tests'
 
 inputs:
   project-folder:
