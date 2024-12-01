@@ -157,10 +157,6 @@ jobs:
 
   deploy-dbt-docs:
     name: DBT Docs to GitHub Pages
-    permissions:
-      pages: write
-      id-token: write
-      contents: read
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
