@@ -9,6 +9,11 @@ on:
 
 concurrency: production
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   dbt:
     name: DBT
@@ -17,6 +22,7 @@ jobs:
       SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
       SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
     with:
+      with-dbt-docs: true
       commands: |
         dbt deps
         dbt build --target github
