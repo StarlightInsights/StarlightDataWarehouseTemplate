@@ -155,7 +155,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: dbt
     if: ${{ inputs.with-dbt-docs == true }}
     steps:
       - name: Deploy DBT Docs to GitHub Pages
