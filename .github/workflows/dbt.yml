@@ -157,7 +157,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: dbt
-    if: ${{ inputs.with-dbt-docs == true }}
+    if: ${{ always() && inputs.with-dbt-docs == true }}
     steps:
       - name: Deploy DBT Docs to GitHub Pages
         if: ${{ inputs.with-dbt-docs == true }}
