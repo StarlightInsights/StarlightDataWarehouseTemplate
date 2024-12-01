@@ -141,4 +141,4 @@ jobs:
           SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         working-directory: ${{ inputs.project-folder }}
-        run: dbt docs generate
+        run: dbt docs generate --target github
