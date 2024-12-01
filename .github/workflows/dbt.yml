@@ -159,6 +159,7 @@ jobs:
     permissions:
       pages: write
       id-token: write
+      contents: read
     environment:
       name: github-pages
       url: ${{ steps.dbt-docs.outputs.page_url }}
