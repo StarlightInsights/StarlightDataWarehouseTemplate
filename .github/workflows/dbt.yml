@@ -2,6 +2,9 @@ name: dbt.yml
 
 on:
   workflow_call:
+    permissions:
+      pages: write
+      id-token: write
     inputs:
       commands:
         required: true
