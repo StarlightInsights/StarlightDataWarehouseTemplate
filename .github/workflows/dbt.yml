@@ -1,10 +1,5 @@
 name: dbt.yml
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 on:
   workflow_call:
     inputs:
@@ -51,6 +46,11 @@ on:
       SNOWFLAKE_PRIVATE_KEY:
         required: true
         description: The Snowflake private key.
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   check-cache:
