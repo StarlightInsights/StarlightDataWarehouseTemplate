@@ -13,5 +13,8 @@
     "[sql]": {
         "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
         "editor.formatOnSave": true
-    }
+    },
+    "editor.stickyScroll.enabled": false,
+    "workbench.tree.enableStickyScroll": false
+
 }
