@@ -24,7 +24,7 @@ jobs:
         uses: ./.github/actions/install-python-dependencies
         with:
           dependencies: sqlfluff
-  
+
       - name: Lint SQL files on Pull Request
         if: github.event_name == 'pull_request'
         run: |
