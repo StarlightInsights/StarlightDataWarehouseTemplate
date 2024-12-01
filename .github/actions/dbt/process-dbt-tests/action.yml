@@ -35,13 +35,13 @@ runs:
             test_name=$(basename "$sql_path" .sql)
 
             # Get the failure message and remove timestamp
-            failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | sed 's/^[0-9:]\{8\}[[:space:]]\{4\}//')
+            failure_msg=$(grep -A 1 "Failure in test $test_name" "dbt_output.log" | tail -n 1 | cut -c 13-)
 
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            echo "🔍 Test Name: $test_name"
-            echo "❗ Error: ${failure_msg#*Failure in test }"
+            echo "🔍 **Name**: $test_name"
+            echo "❗ **Error**: ${failure_msg#*Failure in test }"
             echo ""
-            echo "🦖 Generated SQL Query:"
+            echo "🦖 **Generated SQL Query**:"
             echo "──────────────────────"
             if [ -f "$sql_path" ]; then
               # Format and output SQL with proper indentation
