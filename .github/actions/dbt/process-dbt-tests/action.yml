@@ -38,13 +38,12 @@ runs:
             run_path=${sql_path/compiled/run}
             
             echo "📄 SQL for failed test: $test_name"
-            echo "```sql"
+            echo "Failed test SQL:"
             if [ -f "$run_path" ]; then
               cat "$run_path"
             else
               echo "SQL file not found at: $run_path"
             fi
-            echo "```"
             echo "----------------------------------------"
           fi
         done < "dbt_output.log"
