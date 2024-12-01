@@ -5,7 +5,6 @@ inputs:
   log-file:
     description: 'Path to the DBT output log file'
     required: true
-    default: 'dbt_output.log'
 
 runs:
   using: "composite"
@@ -17,7 +16,8 @@ runs:
           exit 0
         fi
 
-        num_failed_tests=$(grep -o "ERROR=[0-9]*" "${{ inputs.log-file }}" | awk -F= '{print $2}')
+        # Get number of errors from the "Done." line
+        num_failed_tests=$(grep "Done." "${{ inputs.log-file }}" | grep -o "ERROR=[0-9]*" | cut -d'=' -f2)
 
         if [ -z "$num_failed_tests" ] || [ "$num_failed_tests" -eq 0 ]; then
           echo "No failed tests found"
@@ -27,23 +27,19 @@ runs:
         echo "🔴 Found $num_failed_tests failed tests"
         echo "----------------------------------------"
 
-        for i in $(seq 1 "$num_failed_tests"); do
-          header=$(grep -m "$i" "Failure in test" "${{ inputs.log-file }}" | tail -n 1 | cut -c 15-)
-          description=$(grep -A 1 -m "$i" "Failure in test" "${{ inputs.log-file }}" | tail -n 1 | cut -c 15-)
-          code_path=$(grep -m "$i" "compiled Code at" "${{ inputs.log-file }}" | tail -n 1 | awk '{print $5}')
+        while IFS= read -r line; do
+          if [[ $line == *"compiled code at"* ]]; then
+            sql_file=$(echo "$line" | awk '{print $NF}')
+            test_name=$(basename "$sql_file" .sql)
 
-          echo "❌ Failed Test #$i:"
-          echo "📌 $header"
-          echo "ℹ️ $description"
-
-          if [ -f "$code_path" ]; then
-            echo "📄 Generated SQL:"
+            echo "📄 SQL for failed test: $test_name"
             echo "```sql"
-            grep -vE '^$' "$code_path"
+            if [ -f "$sql_file" ]; then
+              cat "$sql_file"
+            else
+              echo "SQL file not found: $sql_file"
+            fi
             echo "```"
-          else
-            echo "⚠️ Code file not found: $code_path"
+            echo "----------------------------------------"
           fi
-
-          echo "----------------------------------------"
-        done
+        done < "${{ inputs.log-file }}"
