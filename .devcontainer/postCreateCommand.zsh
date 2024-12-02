@@ -16,8 +16,8 @@ echo "${blue}${bold}Install requirements.txt${reset}"
 echo ""
 zsh .devcontainer/02_installPipRequirements.zsh
 
-# Copy dbt profiles to home
-echo "${blue}${bold}Copy dbt profiles to home${reset}"
+# Copy DBT profiles to home
+echo "${blue}${bold}Copy DBT profiles to home${reset}"
 echo ""
 zsh .devcontainer/03_copyDbtProfiles.zsh
 
@@ -25,3 +25,8 @@ zsh .devcontainer/03_copyDbtProfiles.zsh
 echo "${blue}${bold}dbt deps{reset}"
 echo ""
 zsh .devcontainer/04_dbtDeps.zsh
+
+# Install DBT deps
+echo "${blue}${bold}Load env{reset}"
+echo ""
+zsh .devcontainer/05_loadEnv.zsh
