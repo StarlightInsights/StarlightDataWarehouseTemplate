@@ -21,12 +21,14 @@ echo "${blue}${bold}Copy DBT profiles to home${reset}"
 echo ""
 zsh .devcontainer/03_copyDbtProfiles.zsh
 
+# Load .env
+echo "${blue}${bold}Load .env{reset}"
+echo ""
+zsh .devcontainer/04_loadEnv.zsh
+
 # Install dbt deps
 echo "${blue}${bold}dbt deps{reset}"
 echo ""
-zsh .devcontainer/04_dbtDeps.zsh
+zsh .devcontainer/05_dbtDeps.zsh
 
-# Install DBT deps
-echo "${blue}${bold}Load env{reset}"
-echo ""
-zsh .devcontainer/05_loadEnv.zsh
+
