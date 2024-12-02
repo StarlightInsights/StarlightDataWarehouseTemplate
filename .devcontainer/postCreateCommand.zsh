@@ -16,12 +16,18 @@ echo "${blue}${bold}Install requirements.txt${reset}"
 echo ""
 zsh .devcontainer/02_installPipRequirements.zsh
 
-# Copy dbt profiles to home
-echo "${blue}${bold}Copy dbt profiles to home${reset}"
+# Copy DBT profiles to home
+echo "${blue}${bold}Copy DBT profiles to home${reset}"
 echo ""
 zsh .devcontainer/03_copyDbtProfiles.zsh
 
-# Install dbt deps
-echo "${blue}${bold}dbt deps{reset}"
+# Load .env variables into the current shell and persist them in ~/.zshrc
+echo "${blue}${bold}Load .env${reset}"
+zsh .devcontainer/04_loadEnv.zsh
 echo ""
-zsh .devcontainer/04_dbtDeps.zsh
+
+
+# Install dbt deps
+echo "${blue}${bold}dbt deps${reset}"
+echo ""
+zsh .devcontainer/05_dbtDeps.zsh
