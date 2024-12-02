@@ -21,14 +21,28 @@ echo "${blue}${bold}Copy DBT profiles to home${reset}"
 echo ""
 zsh .devcontainer/03_copyDbtProfiles.zsh
 
-# Load .env
-echo "${blue}${bold}Load .env{reset}"
+# Load .env variables into the current shell and persist them in ~/.zshrc
+echo "${blue}${bold}Load .env${reset}"
 echo ""
-zsh .devcontainer/04_loadEnv.zsh
+if [ -f .env ]; then
+  echo "Loading .env variables..."
+  # Export variables for the current script
+  export $(grep -v '^#' .env | xargs)
+
+  # Persist to ~/.zshrc for future sessions
+  grep -v '^#' .env | while IFS= read -r line; do
+    if [[ ! -z "$line" ]]; then
+      var=$(echo $line | cut -d '=' -f 1)
+      if ! grep -q "export $var=" ~/.zshrc; then
+        echo "export $line" >> ~/.zshrc
+      fi
+    fi
+  done
+else
+  echo "${red}No .env file found!${reset}"
+fi
 
 # Install dbt deps
-echo "${blue}${bold}dbt deps{reset}"
+echo "${blue}${bold}dbt deps${reset}"
 echo ""
 zsh .devcontainer/05_dbtDeps.zsh
-
-
