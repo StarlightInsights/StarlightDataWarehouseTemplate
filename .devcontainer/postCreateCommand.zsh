@@ -31,3 +31,8 @@ echo ""
 echo "${blue}${bold}dbt deps${reset}"
 echo ""
 zsh .devcontainer/05_dbtDeps.zsh
+
+# Final message
+echo "${blue}${bold}Final message${reset}"
+echo ""
+zsh .devcontainer/06_finalMessage.zsh
