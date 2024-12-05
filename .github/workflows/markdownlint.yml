@@ -1,4 +1,4 @@
-name: MarkdownLint
+name: Markdownlint
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint:
-    name: Install and run MarkdownLint
+    name: Install and run Markdownlint
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node
         uses: ./.github/actions/setup-node
 
-      - name: Install MarkdownLint
+      - name: Install Markdownlint
         uses: ./.github/actions/install-node-dependencies
         with:
           dependencies: "markdownlint-cli"
