@@ -214,8 +214,7 @@ create user if not exists identifier($username)
     password = $password
     email = $email
     default_role = developer
-    default_warehouse = developer
-    default_namespace = developer;
+    default_warehouse = developer;
 
 alter user identifier($username)
     set authentication policy snowflake_policies.authentication_policies.require_mfa;
