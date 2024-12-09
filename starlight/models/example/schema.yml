@@ -5,7 +5,7 @@ models:
       - name: id
         description: "The primary key for this table"
         data_tests:
-          - unique
+          - unique 
           - not_null
 
   - name: my_second_dbt_model
