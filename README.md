@@ -9,11 +9,7 @@ Modern data warehouse template using dbt, Snowflake, GitHub Actions, and integra
 [![DBT on schedule](https://github.com/StarlightInsights/StarlightDataWarehouseTemplate/actions/workflows/dbt-on-schedule.yml/badge.svg?branch=main)](https://github.com/StarlightInsights/StarlightDataWarehouseTemplate/actions/workflows/dbt-on-schedule.yml)
 [![DBT Docs Data Catalog](https://img.shields.io/badge/DBT%20Docs-Data%20Catalog-blue.svg?logo=dbt)](https://starlightinsights.github.io/StarlightDataWarehouseTemplate/)
 
-## Update January 29, 2025 🌟
-
-**Today, I’m open-sourcing the Starlight Data Warehouse Template**—a complete CI/CD and Snowflake developer setup for enterprise data warehouses, designed to maximize developer productivity, security, and lightning-fast delivery of business value.
-
-This means it’s free to use, even for commercial purposes.
+## Thanks For Visiting 🌟
 
 I wholeheartedly welcome your feedback, bug reports, suggestions, PRs, contributions, **GitHub stars**, and any encouraging words 😋
 
