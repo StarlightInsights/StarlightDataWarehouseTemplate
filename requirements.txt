@@ -1,4 +1,4 @@
 dbt-snowflake==1.8.*
 dbt-core==1.8.*
-sqlfluff==3.2.5
+sqlfluff==3.3.1
 yamllint==1.35.1
