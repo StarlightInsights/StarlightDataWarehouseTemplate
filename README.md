@@ -13,18 +13,21 @@ Modern data warehouse template using dbt, Snowflake, GitHub Actions, and integra
 
 I wholeheartedly welcome your feedback, bug reports, suggestions, PRs, contributions, **GitHub stars**, and any encouraging words 😋
 
-If you have any questions or need help with integration, feel free to reach out to martin@starlightinsights.com!
+If you have any questions or need help with integration, feel free to reach out to <martin@starlightinsights.com>!
 
 ## Videoes and documentation
 
 ### [StarlightInsights.com/starlight-data-warehouse-template](https://starlightinsights.com/starlight-data-warehouse-template)
 
 ## Upcoming Features
+
 * VPN integration for a static IP
 * A video about Dependabot
 
 ## Planned Integrations
+
 _With the right collaborations, I also plan to integrate:_
+
 * Snowflake dynamic tables
 * dbt metric layer
 * Lightdash in CI/CD
